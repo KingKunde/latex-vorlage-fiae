@@ -1,37 +1,48 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Implementierungsphase} 
-\label{sec:Implementierungsphase}
+\subsection{Implementierung fachlicher Kernfunktionen}
+\label{sec:ImplementierungKernfunktionen}
+Die Umsetzung erfolgte modulweise entlang der fachlichen Teilbereiche. Zunächst
+wurden die SQLModel-Klassen für Organisationen, Benutzer, Mail-Adressen,
+IP-Adressen und Audit-Daten angelegt. Anschließend wurden die zugehörigen
+Service-Module für Validierung, Benutzerverwaltung, Rollenprüfung und
+fachliche Pflegeprozesse implementiert. Dieses Vorgehen stellte sicher, dass
+die Webschicht auf klar abgegrenzte Fachfunktionen zugreifen kann.
 
-\subsection{Implementierung der Datenstrukturen}
-\label{sec:ImplementierungDatenstrukturen}
+Ein technischer Schwerpunkt lag auf der Authentifizierung. Die Anwendung
+nutzt Session-Login, Passwort-Hashing mit Argon2, Login-Audit sowie
+Schutzmechanismen gegen wiederholte Fehlanmeldungen. Damit wurde der
+Anforderung Rechnung getragen, dass sicherheitsnahe Verwaltungsfunktionen nicht
+über ungesicherte Standardzugriffe bereitgestellt werden dürfen.
 
-\begin{itemize}
-	\item Beschreibung der angelegten Datenbank (\zB Generierung von \acs{SQL} aus Modellierungswerkzeug oder händisches Anlegen), \acs{XML}-Schemas \usw.
-\end{itemize}
+\subsection{Implementierung der Benutzer- und Mandantenverwaltung}
+\label{sec:ImplementierungMandantenverwaltung}
+Die Benutzer- und Mandantenverwaltung bildet den Kern des Fachprozesses.
+Organisationen können angelegt, geändert und logisch getrennt verwaltet
+werden. Benutzer erhalten Rollen und werden bestimmten Organisationen
+zugeordnet. Auf dieser Grundlage steuert die Anwendung, welche Datensätze
+eingesehen oder gepflegt werden dürfen.
 
+Für Mail- und IP-Einträge wurden eigene Verwaltungsfunktionen umgesetzt, die
+Eingaben validieren und Änderungen protokollieren. Das vermeidet fachlich
+ungültige Daten und schafft eine einheitliche Grundlage für die
+nachgelagerte Weiterverarbeitung im Mail-Umfeld.
 
-\subsection{Implementierung der Benutzeroberfläche}
-\label{sec:ImplementierungBenutzeroberflaeche}
+\subsection{Erzielte Projektergebnisse}
+\label{sec:ErzielteProjektergebnisse}
+Mit Abschluss der Implementierung lag eine lauffähige Webanwendung vor, die
+den vorgesehenen Funktionsumfang abdeckt. Organisationen, Benutzer,
+Mail-Adressen und IP-Adressen können zentral verwaltet werden. Fachliche
+Änderungen werden im Audit-Log dokumentiert und können für definierte Fälle
+über einen Rollback wiederhergestellt werden.
 
-\begin{itemize}
-	\item Beschreibung der Implementierung der Benutzeroberfläche, falls dies separat zur Implementierung der Geschäftslogik erfolgt (\zB bei \acs{HTML}-Oberflächen und Stylesheets).
-	\item \Ggfs Beschreibung des Corporate Designs und dessen Umsetzung in der Anwendung.
-	\item Screenshots der Anwendung
-\end{itemize}
+Zusammenfassend wurde damit nicht nur eine neue Eingabemaske geschaffen,
+sondern ein strukturierter Verwaltungsprozess mit Rechtekonzept, Validierung
+und Historisierung eingeführt. Ein Quelltextauszug zur Berechtigungslogik
+befindet sich im \Anhang{app:CodeAuthentifizierung}.
 
-\paragraph{Beispiel}
-Screenshots der Anwendung in der Entwicklungsphase mit Dummy-Daten befinden sich im \Anhang{Screenshots}.
-
-
-\subsection{Implementierung der Geschäftslogik}
-\label{sec:ImplementierungGeschaeftslogik}
-
-\begin{itemize}
-	\item Beschreibung des Vorgehens bei der Umsetzung/Programmierung der entworfenen Anwendung.
-	\item \Ggfs interessante Funktionen/Algorithmen im Detail vorstellen, verwendete Entwurfsmuster zeigen.
-	\item Quelltextbeispiele zeigen.
-	\item Hinweis: Wie in Kapitel~\ref{sec:Einleitung}: \nameref{sec:Einleitung} zitiert, wird nicht ein lauffähiges Programm bewertet, sondern die Projektdurchführung. Dennoch würde ich immer Quelltextausschnitte zeigen, da sonst Zweifel an der tatsächlichen Leistung des Prüflings aufkommen können.
-\end{itemize}
-
-\paragraph{Beispiel}
-Die Klasse \texttt{Com\-par\-ed\-Na\-tu\-ral\-Mo\-dule\-In\-for\-ma\-tion} findet sich im \Anhang{app:CNMI}.  
+Während der Implementierung zeigte sich, dass insbesondere die Trennung
+zwischen organisationsbezogenen und globalen Rechten sauber im Service-Layer
+abgebildet werden muss. Eine reine Prüfung auf Oberflächenebene wäre nicht
+ausreichend gewesen, da schutzbedürftige Aktionen auch auf Routenniveau
+abgesichert werden müssen. Die Umsetzung im Service-Layer war daher ein
+wesentlicher Beitrag zur technischen Qualität des Ergebnisses.

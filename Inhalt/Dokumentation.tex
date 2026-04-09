@@ -1,12 +1,32 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Dokumentation}
-\label{sec:Dokumentation}
+\section{Kundendokumentation}
+\label{sec:Kundendokumentation}
+Die Anwendung wird über einen Webbrowser aufgerufen. Nach erfolgreicher
+Anmeldung stehen die Menüpunkte Dashboard, Organisationen, Benutzer,
+Mail-Adressen, IP-Adressen und Audit-Log zur Verfügung. Welche Bereiche
+sichtbar und bearbeitbar sind, richtet sich nach der zugewiesenen Rolle.
 
-\begin{itemize}
-	\item Wie wurde die Anwendung für die Benutzer/Administratoren/Entwickler dokumentiert (\zB Benutzerhandbuch, \acs{API}-Dokumentation)?
-	\item Hinweis: Je nach Zielgruppe gelten bestimmte Anforderungen für die Dokumentation (\zB keine IT-Fachbegriffe in einer Anwenderdokumentation verwenden, aber auf jeden Fall in einer Dokumentation für den IT-Bereich).
-\end{itemize}
+Neue Organisationen, Benutzer sowie Mail- und IP-Einträge werden über die
+jeweiligen Listenansichten angelegt. Änderungen erfolgen über Bearbeitungs-
+formulare, die Eingaben bereits beim Speichern validieren. Fehlerhafte
+Eingaben werden direkt am betroffenen Feld angezeigt. Dadurch kann die Pflege
+ohne technische Detailkenntnisse nachvollziehbar und sicher erfolgen.
 
-\paragraph{Beispiel}
-Ein Ausschnitt aus der erstellten Benutzerdokumentation befindet sich im \Anhang{app:BenutzerDoku}.
-Die Entwicklerdokumentation wurde mittels PHPDoc\footnote{Vgl. \cite{phpDoc}} automatisch generiert. Ein beispielhafter Auszug aus der Dokumentation einer Klasse findet sich im \Anhang{app:Doc}. 
+Das Audit-Log dient der Rückverfolgung fachlicher Änderungen. Es zeigt, wann
+ein Datensatz erstellt, geändert oder gelöscht wurde. Soweit fachlich
+freigegeben, können Änderungen aus dem Audit-Log heraus zurückgesetzt
+werden. Ein kurzer Benutzerhinweis mit den wichtigsten Bedienregeln befindet
+sich zusätzlich im \Anhang{app:Kundenhinweis}.
+
+Für die Einführung beim Kunden ist keine umfangreiche Schulung erforderlich.
+Die Anwendung orientiert sich an den bekannten Objekten des Fachprozesses und
+verwendet eine durchgängige Bedienlogik für Listen-, Detail- und
+Bearbeitungsansichten. Dadurch kann die Kundendokumentation auf die für den
+Betrieb notwendigen Schritte konzentriert bleiben.
+
+Im laufenden Betrieb ist darauf zu achten, dass Berechtigungen nur nach dem
+tatsächlichen Aufgabenbereich vergeben werden. Insbesondere administrative
+Rollen dürfen nicht pauschal verteilt werden, da sie organisationsübergreifende
+Pflegevorgänge ermöglichen. Neue Einträge für Mail-Adressen und IP-Adressen
+sollen vor dem Speichern fachlich geprüft werden, damit nur berechtigte
+Ausnahmen in den verwalteten Datenbestand aufgenommen werden.

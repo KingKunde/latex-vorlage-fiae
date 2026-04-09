@@ -1,42 +1,45 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Projektplanung} 
-\label{sec:Projektplanung}
+\subsection{Projektorganisation und Zeitplanung}
+\label{sec:Projektorganisation}
+Die Projektdurchführung erfolgte im für die FIAE-Projektarbeit vorgesehenen
+Zeitbudget von 80 Stunden. Zur Steuerung des Vorhabens wurde die Arbeit in
+Analyse, Soll-Konzept, Entwurf, Implementierung, Test, Inbetriebnahmevorbereitung
+und Dokumentation gegliedert. Diese Aufteilung war notwendig, damit sowohl die
+fachliche Problemlösung als auch die Qualitätssicherung innerhalb des
+vorgegebenen Rahmens belastbar geplant werden konnten.
 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{9cm}|r|}
+\hline
+\textbf{Projektphase} & \textbf{Stunden} \\
+\hline
+Analyse der Ausgangssituation und Anforderungsklärung & 8 \\
+\hline
+Soll-Konzept und Variantenvergleich & 10 \\
+\hline
+Entwurf von Datenmodell, Rollenmodell und Oberfläche & 12 \\
+\hline
+Implementierung der Anwendung & 28 \\
+\hline
+Tests, Fehlerkorrekturen und Abnahmevorbereitung & 10 \\
+\hline
+Kundendokumentation und Projektdokumentation & 12 \\
+\hline
+\textbf{Summe} & \textbf{80} \\
+\hline
+\end{tabular}
+\caption{Geplante Zeitaufteilung für das Projekt}
+\label{tab:Zeitplanung}
+\end{table}
 
-\subsection{Projektphasen}
-\label{sec:Projektphasen}
+Die Umsetzung erfolgte iterativ. Nach der Erhebung der fachlichen Anforderungen
+wurden die Teilbereiche Organisationen, Benutzer, Mail-Adressen, IP-Adressen,
+Authentifizierung und Auditierung zunächst konzeptionell getrennt und danach
+schrittweise implementiert. Dieses Vorgehen war zweckmäßig, weil die
+fachliche Rückkopplung aus dem internen IT-Umfeld unmittelbar in Entwurf und
+Implementierung übernommen werden konnte.
 
-\begin{itemize}
-	\item In welchem Zeitraum und unter welchen Rahmenbedingungen (\zB Tagesarbeitszeit) findet das Projekt statt?
-	\item Verfeinerung der Zeitplanung, die bereits im Projektantrag vorgestellt wurde.
-\end{itemize}
-
-\paragraph{Beispiel}
-Tabelle~\ref{tab:Zeitplanung} zeigt ein Beispiel für eine grobe Zeitplanung.
-\tabelle{Zeitplanung}{tab:Zeitplanung}{ZeitplanungKurz}\\
-Eine detailliertere Zeitplanung findet sich im \Anhang{app:Zeitplanung}.
-
-
-\subsection{Abweichungen vom Projektantrag}
-\label{sec:AbweichungenProjektantrag}
-
-\begin{itemize}
-	\item Sollte es Abweichungen zum Projektantrag geben (\zB Zeitplanung, Inhalt des Projekts, neue Anforderungen), müssen diese explizit aufgeführt und begründet werden.
-\end{itemize}
-
-
-\subsection{Ressourcenplanung}
-\label{sec:Ressourcenplanung}
-
-\begin{itemize}
-	\item Detaillierte Planung der benötigten Ressourcen (Hard-/Software, Räumlichkeiten \usw).
-	\item \Ggfs sind auch personelle Ressourcen einzuplanen (\zB unterstützende Mitarbeiter).
-	\item Hinweis: Häufig werden hier Ressourcen vergessen, die als selbstverständlich angesehen werden (\zB PC, Büro). 
-\end{itemize}
-
-
-\subsection{Entwicklungsprozess}
-\label{sec:Entwicklungsprozess}
-\begin{itemize}
-	\item Welcher Entwicklungsprozess wird bei der Bearbeitung des Projekts verfolgt (\zB Wasserfall, agiler Prozess)?
-\end{itemize}
+Materiell wurde ein vorhandener Entwicklungsarbeitsplatz mit Python~3.12,
+FastAPI, SQLModel, SQLite und einer lokalen Testumgebung genutzt. Externe
+Lizenzkosten fielen für die im Projekt eingesetzten Kernkomponenten nicht an.

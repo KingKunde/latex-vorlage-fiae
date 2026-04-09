@@ -1,0 +1,69 @@
+@startuml
+hide circle
+skinparam shadowing false
+skinparam linetype ortho
+
+entity "organisation" as organisation {
+  * id : int
+  --
+  name : str
+}
+
+entity "users" as users {
+  * id : int
+  --
+  username : str
+  first_name : str
+  last_name : str
+  email : str
+  is_bootstrap_admin : bool
+  password_hash : str
+  organisation_id : int?
+  role : str
+}
+
+entity "mail_addresses" as mail_addresses {
+  * id : int
+  --
+  email : str
+  organisation_id : int
+  is_active : bool
+}
+
+entity "login_audit" as login_audit {
+  * id : int
+  --
+  username : str
+  user_id : int?
+  success : bool
+  reason : str
+  ip_address : str?
+  user_agent : str?
+  created_at : datetime
+}
+
+entity "login_security_state" as login_security_state {
+  * id : int
+  --
+  username : str <<unique>>
+  failed_attempts : int
+  locked_until : datetime?
+  last_failed_at : datetime?
+}
+
+organisation ||--o{ users : "ordnet zu"
+organisation ||--o{ mail_addresses : "enthaelt"
+users ||--o{ login_audit : "verursacht"
+
+note right of login_audit
+  Audit-Eintraege koennen auch ohne
+  aufloesbaren Benutzer entstehen,
+  z. B. bei falscher E-Mail-Adresse.
+end note
+
+note bottom of login_security_state
+  Speichert den Sperrstatus je Username
+  fuer Login-Schutz und Rate-Limiting.
+end note
+
+@enduml

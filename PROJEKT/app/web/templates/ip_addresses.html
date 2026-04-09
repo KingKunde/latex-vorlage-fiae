@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if is_admin %}
+<section class="panel">
+    <div class="section-header">
+        <h3>IP-Adresse anlegen</h3>
+    </div>
+    <form method="post" action="/ip_addresses/create">
+        <div class="form-grid">
+            <div class="field">
+                <label for="ip_address">IP-Adresse</label>
+                <input id="ip_address" name="ip_address" value="{{ form_values.get('ip_address', '') }}" required>
+                <p class="field-error-slot {% if field_errors.get('ip_address') %}is-visible{% endif %}">{{ field_errors.get("ip_address", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="organization_id">Organisation</label>
+                <select id="organization_id" name="organization_id" required>
+                    {% for organization in organizations %}
+                    <option value="{{ organization.id }}" {% if form_values.get('organization_id', organizations[0].id if organizations else '') == (organization.id|string) %}selected{% endif %}>{{ organization.name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="field-error-slot {% if field_errors.get('organization_id') %}is-visible{% endif %}">{{ field_errors.get("organization_id", "") }}</p>
+            </div>
+            <div class="field checkbox-field">
+                <label for="is_active">Status</label>
+                <label class="checkbox-control" for="is_active">
+                    <input id="is_active" name="is_active" type="checkbox" value="true" {% if form_values.get('is_active', 'true') == 'true' %}checked{% endif %}>
+                    <span>Aktiviert</span>
+                </label>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="button-primary" type="submit">Speichern</button>
+        </div>
+    </form>
+</section>
+{% endif %}
+
+<section class="panel">
+    <div class="section-header">
+        <h3>IP-Adressen</h3>
+    </div>
+    {% if ip_addresses %}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>IP-Adresse</th>
+            <th>Status</th>
+            <th>Organisation</th>
+            {% if is_admin %}<th>Aktionen</th>{% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in ip_addresses %}
+        <tr>
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.ip_address }}</td>
+            <td>
+                {% if entry.is_active %}
+                <span class="status-badge status-active">Aktiv</span>
+                {% else %}
+                <span class="status-badge status-inactive">Stillgelegt</span>
+                {% endif %}
+            </td>
+            <td>{{ organization_names.get(entry.organization_id, "Unbekannt") }}</td>
+            {% if is_admin %}
+            <td>
+                <div class="row-actions">
+                    <a class="button button-secondary" href="/ip_addresses/{{ entry.id }}/edit">Ändern</a>
+                    <form method="post" action="/ip_addresses/{{ entry.id }}/delete">
+                        <button class="button-danger" type="submit">Löschen</button>
+                    </form>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Noch keine IP-Adressen vorhanden.</p>
+    {% endif %}
+</section>
+{% endblock %}

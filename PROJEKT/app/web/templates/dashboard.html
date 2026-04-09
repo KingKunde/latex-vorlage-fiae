@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>Statistik</h3>
+    </div>
+
+    <div class="dashboard-top">
+        <article class="stat-card">
+            <div class="counter_item">
+                <div class="counter__number">
+                    <span class="n counter">{{ counts.users }}</span>
+                </div>
+                <div class="counter_title">Benutzer</div>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="counter_item">
+                <div class="counter__number">
+                    <span class="n counter">{{ counts.mail_addresses }}</span>
+                </div>
+                <div class="counter_title">Mails</div>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="counter_item">
+                <div class="counter__number">
+                    <span class="n counter">{{ counts.ip_addresses or 0 }}</span>
+                </div>
+                <div class="counter_title">IP-Adressen</div>
+            </div>
+        </article>
+    </div>
+
+    {% if is_root %}
+    <div class="dashboard-bottom">
+        <article class="stat-card">
+            <div class="counter_item">
+                <div class="counter__number">
+                    <span class="n counter">{{ counts.organizations }}</span>
+                </div>
+                <div class="counter_title">Organisationen</div>
+            </div>
+        </article>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

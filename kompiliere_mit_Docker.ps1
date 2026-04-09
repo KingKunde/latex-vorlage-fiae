@@ -7,7 +7,21 @@ if ($answer -eq "y") {
     Write-Output "Diagramme werden in SVG umgewandelt"
     $files = Get-ChildItem -Path ".\PlantUML\" -Filter "*.puml"
     foreach ($file in $files) {
+        $svgName = Join-Path ".\PlantUML\" ([IO.Path]::GetFileNameWithoutExtension($file.Name) + ".svg")
+        $pdfName = Join-Path ".\Anhang\" ([IO.Path]::GetFileNameWithoutExtension($file.Name) + ".pdf")
+
+        if (Test-Path $svgName) {
+            Remove-Item $svgName
+        }
+
+        if (Test-Path $pdfName) {
+            Remove-Item $pdfName
+        }
+
         & java -jar plantuml.jar -charset UTF-8 -svg $file.FullName
+        if ($LASTEXITCODE -ne 0) {
+            throw "PlantUML-Fehler beim Kompilieren von $($file.Name)"
+        }
     }
 
     Write-Output "Diagramme wurden erfolgreich in SVG umgewandelt"
@@ -16,6 +30,9 @@ if ($answer -eq "y") {
     foreach ($svgFile in $svgFiles) {
         $pdfName = ".\Anhang\" + [IO.Path]::GetFileNameWithoutExtension($svgFile.Name) + ".pdf"
         & inkscape --export-filename=$pdfName $svgFile.FullName
+        if ($LASTEXITCODE -ne 0) {
+            throw "Inkscape-Fehler beim Umwandeln von $($svgFile.Name)"
+        }
     }
 
     Write-Output "Diagramme wurden erfolgreich in PDF umgewandelt"

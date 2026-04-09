@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>IP-Adresse bearbeiten</h3>
+    </div>
+    <form method="post" action="/ip_addresses/{{ entry.id }}/edit">
+        <div class="form-grid">
+            <div class="field">
+                <label for="ip_address">IP-Adresse</label>
+                <input id="ip_address" name="ip_address" value="{{ form_values.get('ip_address', entry.ip_address) }}" required>
+                <p class="field-error-slot {% if field_errors.get('ip_address') %}is-visible{% endif %}">{{ field_errors.get("ip_address", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="organization_id">Organisation</label>
+                <select id="organization_id" name="organization_id" required>
+                    {% for organization in organizations %}
+                    <option value="{{ organization.id }}" {% if form_values.get('organization_id', entry.organization_id|string) == (organization.id|string) %}selected{% endif %}>{{ organization.name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="field-error-slot {% if field_errors.get('organization_id') %}is-visible{% endif %}">{{ field_errors.get("organization_id", "") }}</p>
+            </div>
+            <div class="field checkbox-field">
+                <label for="is_active">Status</label>
+                <label class="checkbox-control" for="is_active">
+                    <input id="is_active" name="is_active" type="checkbox" value="true" {% if form_values.get('is_active', 'true' if entry.is_active else 'false') == 'true' %}checked{% endif %}>
+                    <span>Aktiviert</span>
+                </label>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="button-primary" type="submit">Speichern</button>
+            <a class="button button-secondary" href="/ip_addresses/page">Zurück</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>Benutzer anlegen</h3>
+    </div>
+    <form method="post" action="/users/create" autocomplete="off">
+        <div class="form-grid">
+            <div class="field">
+                <label for="new_first_name">Vorname</label>
+                <input id="new_first_name" name="first_name" value="{{ form_values.get('first_name', '') }}" required>
+                <p class="field-error-slot {% if field_errors.get('first_name') %}is-visible{% endif %}">{{ field_errors.get("first_name", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="new_last_name">Nachname</label>
+                <input id="new_last_name" name="last_name" value="{{ form_values.get('last_name', '') }}" required>
+                <p class="field-error-slot {% if field_errors.get('last_name') %}is-visible{% endif %}">{{ field_errors.get("last_name", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="new_email">E-Mail-Adresse</label>
+                <input id="new_email" name="email" type="email" autocomplete="off" value="{{ form_values.get('email', '') }}" required>
+                <p class="field-error-slot {% if field_errors.get('email') %}is-visible{% endif %}">{{ field_errors.get("email", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="new_password">Passwort</label>
+                <input id="new_password" name="password" type="password" autocomplete="new-password" data-password-validate="true" required>
+                <p class="field-error-slot {% if field_errors.get('password') %}is-visible{% endif %}">{{ field_errors.get("password", "") }}</p>
+            </div>
+            {% if is_root %}
+            <div class="field">
+                <label for="organization_id">Organisation</label>
+                <select id="organization_id" name="organization_id">
+                    <option value="">Keine Organisation</option>
+                    {% for organization in organizations %}
+                    <option value="{{ organization.id }}" {% if form_values.get('organization_id') == (organization.id|string) %}selected{% endif %}>{{ organization.name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="field-error-slot {% if field_errors.get('organization_id') %}is-visible{% endif %}">{{ field_errors.get("organization_id", "") }}</p>
+            </div>
+            {% endif %}
+            <div class="field">
+                <label for="role">Rolle</label>
+                <select id="role" name="role" required>
+                    <option value="admin" {% if form_values.get('role', 'admin') == 'admin' %}selected{% endif %}>Admin</option>
+                    <option value="user" {% if form_values.get('role') == 'user' %}selected{% endif %}>Benutzer</option>
+                </select>
+                <p class="field-error-slot {% if field_errors.get('role') %}is-visible{% endif %}">{{ field_errors.get("role", "") }}</p>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="button-primary" type="submit">Speichern</button>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <div class="section-header">
+        <h3>Benutzer</h3>
+    </div>
+    {% if users %}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Rolle</th>
+            <th>Organisation</th>
+            {% if is_admin %}<th>Aktionen</th>{% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ role_labels.get(user.role, user.role) }}</td>
+            <td>{{ organization_names.get(user.organization_id, "Unbekannt") }}</td>
+            {% if is_admin %}
+            <td>
+                {% if user.is_root %}
+                <span class="status-badge status-inactive">Root</span>
+                {% else %}
+                <div class="row-actions">
+                    <a class="button button-secondary" href="/users/{{ user.id }}/edit">Ändern</a>
+                    <form method="post" action="/users/{{ user.id }}/delete">
+                        <button class="button-danger" type="submit">Löschen</button>
+                    </form>
+                </div>
+                {% endif %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Noch keine Benutzer vorhanden.</p>
+    {% endif %}
+</section>
+{% endblock %}

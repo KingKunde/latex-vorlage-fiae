@@ -1,11 +1,61 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Abnahmephase} 
-\label{sec:Abnahmephase}
+\section{Qualitätssicherung}
+\label{sec:Qualitaetssicherung}
+Die Qualitätssicherung erfolgte durch die Kombination aus automatisierten und
+manuellen Tests. Auf Code-Ebene wurden insbesondere Validierungen,
+Benutzerverwaltung, Audit-Funktionen und Formularlogik über vorhandene
+Pytest-Tests abgesichert. Auf Anwendungsebene wurden die zentralen
+Arbeitsabläufe über die Weboberfläche geprüft, darunter Anmeldung,
+Rollenvergabe, Mandantentrennung sowie die Pflege von Mail- und IP-Adressen.
 
-\begin{itemize}
-	\item Welche Tests (\zB Unit-, Integrations-, Systemtests) wurden durchgeführt und welche Ergebnisse haben sie geliefert (\zB Logs von Unit Tests, Testprotokolle der Anwender)?
-	\item Wurde die Anwendung offiziell abgenommen?
-\end{itemize}
+Die Teststrategie war für das Projekt ausreichend, weil sie sowohl die
+fachliche Logik als auch die Benutzerinteraktion abdeckt. Automatisierte Tests
+reduzieren das Risiko von Regressionen bei künftigen Anpassungen. Die
+manuellen Durchläufe waren zusätzlich erforderlich, um Sichtbarkeiten,
+Navigation und Fehlermeldungen im Zusammenspiel der einzelnen Komponenten zu
+prüfen. Ein Testauszug befindet sich im \Anhang{app:Testauszug}.
 
-\paragraph{Beispiel}
-Ein Auszug eines Unit Tests befindet sich im \Anhang{app:Test}. Dort ist auch der Aufruf des Tests auf der Konsole des Webservers zu sehen.
+\subsection{Soll-Ist-Vergleich von Leistung, Zeit und Inhalt}
+\label{sec:SollIstVergleich}
+Die geplanten Kernleistungen wurden erreicht. Die Anwendung ist
+mehrmandantenfähig, stellt ein rollenbasiertes Berechtigungskonzept bereit und
+ermöglicht die zentrale Pflege von Organisationen, Benutzern, Mail-Adressen
+und IP-Adressen. Zusätzlich wurden Audit-Log, Login-Schutz und Rollback für
+ausgewählte Änderungen umgesetzt.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{5.8cm}|p{2.3cm}|p{2.8cm}|}
+\hline
+\textbf{Aspekt} & \textbf{Soll} & \textbf{Ist} \\
+\hline
+Mandantenfähige Verwaltung & umgesetzt & umgesetzt \\
+\hline
+Rollen- und Rechtesystem & umgesetzt & umgesetzt \\
+\hline
+Auditierbare Änderungen & umgesetzt & umgesetzt \\
+\hline
+Rollback einzelner Änderungen & optional & umgesetzt \\
+\hline
+Projektzeit & 80 h & eingehalten \\
+\hline
+\end{tabular}
+\caption{Soll-Ist-Vergleich}
+\label{tab:SollIst}
+\end{table}
+
+Inhaltlich ergaben sich keine grundlegenden Abweichungen vom Projektziel. Der
+Schwerpunkt verlagerte sich im Projektverlauf leicht zugunsten von
+Sicherheits- und Nachvollziehbarkeitsanforderungen. Diese Vertiefung war
+fachlich sinnvoll, da gerade bei einer zentralen Verwaltungsanwendung die
+korrekte Rechteprüfung und die Historisierung der Änderungen für den
+späteren Betrieb entscheidend sind.
+
+\subsection{Bewertung der Testergebnisse}
+\label{sec:BewertungTestergebnisse}
+Die durchgeführten Tests bestätigten, dass die wesentlichen Pflegeabläufe
+stabil funktionieren. Insbesondere die Kombination aus Login, Rollenprüfung,
+Mandantentrennung und Auditierung konnte ohne fachliche Fehlfunktion
+nachgewiesen werden. Restpunkte betreffen keine fehlenden Kernfunktionen,
+sondern mögliche spätere Erweiterungen wie weitergehende Integrations- oder
+Lasttests für einen produktionsnahen Ausbau.

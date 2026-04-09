@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>Mail-Adresse bearbeiten</h3>
+    </div>
+    <form method="post" action="/mail_addresses/{{ entry.id }}/edit">
+        <div class="form-grid">
+            <div class="field">
+                <label for="email">Mail-Adresse</label>
+                <input id="email" name="email" type="email" value="{{ form_values.get('email', entry.email) }}" required>
+                <p class="field-error-slot {% if field_errors.get('email') %}is-visible{% endif %}">{{ field_errors.get("email", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="organization_id">Organisation</label>
+                <select id="organization_id" name="organization_id" required>
+                    {% for organization in organizations %}
+                    <option value="{{ organization.id }}" {% if form_values.get('organization_id', entry.organization_id|string) == (organization.id|string) %}selected{% endif %}>
+                        {{ organization.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <p class="field-error-slot {% if field_errors.get('organization_id') %}is-visible{% endif %}">{{ field_errors.get("organization_id", "") }}</p>
+            </div>
+            <div class="field checkbox-field">
+                <label for="is_active">Status</label>
+                <label class="checkbox-control" for="is_active">
+                    <input id="is_active" name="is_active" type="checkbox" value="true" {% if form_values.get('is_active', 'true' if entry.is_active else 'false') == 'true' %}checked{% endif %}>
+                    <span>Aktiviert</span>
+                </label>
+                <p class="field-error-slot {% if field_errors.get('is_active') %}is-visible{% endif %}">{{ field_errors.get("is_active", "") }}</p>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="button-primary" type="submit">Speichern</button>
+            <a class="button button-secondary" href="/mail_addresses/page">Zurück</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

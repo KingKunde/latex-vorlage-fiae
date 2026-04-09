@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <form method="post" action="/users/{{ user.id }}/edit">
+        <div class="form-grid">
+            <div class="field">
+                <label for="first_name">Vorname</label>
+                <input id="first_name" name="first_name" value="{{ form_values.get('first_name', user.first_name) }}" {% if not can_edit_user %}disabled{% endif %} required>
+                <p class="field-error-slot {% if field_errors.get('first_name') %}is-visible{% endif %}">{{ field_errors.get("first_name", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="last_name">Nachname</label>
+                <input id="last_name" name="last_name" value="{{ form_values.get('last_name', user.last_name) }}" {% if not can_edit_user %}disabled{% endif %} required>
+                <p class="field-error-slot {% if field_errors.get('last_name') %}is-visible{% endif %}">{{ field_errors.get("last_name", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="email">E-Mail-Adresse</label>
+                <input id="email" name="email" type="email" value="{{ form_values.get('email', user.email) }}" {% if not can_edit_user %}disabled{% endif %} required>
+                <p class="field-error-slot {% if field_errors.get('email') %}is-visible{% endif %}">{{ field_errors.get("email", "") }}</p>
+            </div>
+            <div class="field">
+                <label for="password">Neues Passwort</label>
+                <input id="password" name="password" type="password" data-password-validate="true" {% if not can_edit_user %}disabled{% endif %}>
+                <p class="field-error-slot {% if field_errors.get('password') %}is-visible{% endif %}">{{ field_errors.get("password", "") }}</p>
+            </div>
+            {% if can_manage_user and is_root and can_edit_user %}
+            <div class="field">
+                <label for="organization_id">Organisation</label>
+                <select id="organization_id" name="organization_id">
+                    <option value="" {% if form_values.get('organization_id', user.organization_id if user.organization_id is not none else '') == '' %}selected{% endif %}>Keine Organisation</option>
+                    {% for organization in organizations %}
+                    <option value="{{ organization.id }}" {% if form_values.get('organization_id', user.organization_id if user.organization_id is not none else '') == (organization.id|string) %}selected{% endif %}>
+                        {{ organization.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <p class="field-error-slot {% if field_errors.get('organization_id') %}is-visible{% endif %}">{{ field_errors.get("organization_id", "") }}</p>
+            </div>
+            {% endif %}
+            {% if can_manage_user and can_edit_user %}
+            <div class="field">
+                <label for="role">Rolle</label>
+                <select id="role" name="role" required>
+                    <option value="admin" {% if form_values.get('role', user.role) == "admin" %}selected{% endif %}>Admin</option>
+                    <option value="user" {% if form_values.get('role', user.role) == "user" %}selected{% endif %}>Benutzer</option>
+                </select>
+                <p class="field-error-slot {% if field_errors.get('role') %}is-visible{% endif %}">{{ field_errors.get("role", "") }}</p>
+            </div>
+            {% else %}
+            <input type="hidden" name="organization_id" value="{{ user.organization_id if user.organization_id is not none else '' }}">
+            <input type="hidden" name="role" value="{{ user.role }}">
+            {% endif %}
+        </div>
+        <div class="actions">
+            {% if can_edit_user %}
+            <button class="button-primary" type="submit">Speichern</button>
+            {% endif %}
+            <a class="button button-secondary" href="{% if is_admin %}/users/page{% else %}/dashboard{% endif %}">Zurück</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,101 +1,123 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Analysephase} 
-\label{sec:Analysephase}
+\section{Technisch-wirtschaftlicher Variantenvergleich}
+\label{sec:Variantenvergleich}
+Für die Zielerreichung wurden drei Lösungsvarianten betrachtet. Variante~1
+war die Beibehaltung der manuellen Pflege. Variante~2 war die Einführung einer
+allgemeinen Standardlösung für Stammdaten- und Freigabeverwaltung. Variante~3
+war die Entwicklung einer betriebsspezifischen Webanwendung. Die Entscheidung
+wurde sowohl technisch als auch wirtschaftlich bewertet.
 
+\subsection{Technische Bewertung der Varianten}
+\label{sec:TechnischeBewertung}
+Die manuelle Pflege verursacht keine Einführungskosten, löst jedoch keine der
+identifizierten Kernprobleme. Weder die Mandantentrennung noch eine
+nachvollziehbare Änderungshistorie werden dadurch systematisch abgebildet.
+Auch Validierungen und ein konsistentes Rollenmodell fehlen weiterhin.
 
-\subsection{Ist-Analyse} 
-\label{sec:IstAnalyse}
-\begin{itemize}
-	\item Wie ist die bisherige Situation (\zB bestehende Programme, Wünsche der Mitarbeiter)?
-	\item Was gilt es zu erstellen/verbessern?
-\end{itemize}
+Eine Standardlösung reduziert den manuellen Aufwand grundsätzlich, wäre für
+den konkreten Einsatzzweck jedoch nur eingeschränkt passend. Der benötigte
+Funktionsumfang ist zwar überschaubar, kombiniert aber mehrere spezifische
+Anforderungen: organisationsbezogene Rechte, Verwaltung von Mail- und
+IP-Freigaben, Session-Login, Audit-Log und Datenbereitstellung für die
+nachgelagerte Mail-Infrastruktur. Bei einer Fremdlösung wären deshalb
+Anpassungen, Schnittstellenabstimmungen und ein fachlicher Kompromiss beim
+Rollenmodell zu erwarten gewesen.
 
+Die Eigenentwicklung deckt den benötigten Funktionsumfang zielgerichtet ab und
+lässt sich an den vorhandenen Betriebsprozess anpassen. Gleichzeitig bleibt
+die Anwendung technisch überschaubar, weil sie nur die fachlich benötigten
+Funktionen enthält. Der zusätzliche Entwicklungsaufwand ist für den
+Projektumfang vertretbar und führt zu einer wartbaren Lösung ohne unnötige
+Abhängigkeit von Fremdprodukten.
 
-\subsection{Wirtschaftlichkeitsanalyse}
-\label{sec:Wirtschaftlichkeitsanalyse}
-\begin{itemize}
-	\item Lohnt sich das Projekt für das Unternehmen?
-\end{itemize}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{4.6cm}|c|c|c|}
+\hline
+\textbf{Kriterium} & \textbf{Manuell} & \textbf{Standardlösung} & \textbf{Eigenentwicklung} \\
+\hline
+Mandantentrennung & schwach & mittel & hoch \\
+\hline
+Fachprozessabbildung & schwach & mittel & hoch \\
+\hline
+Nachvollziehbarkeit von Änderungen & schwach & mittel & hoch \\
+\hline
+Anpassbarkeit & niedrig & mittel & hoch \\
+\hline
+Betriebliche Einführbarkeit & hoch & mittel & hoch \\
+\hline
+\end{tabular}
+\caption{Technischer Vergleich der Lösungsvarianten}
+\label{tab:TechnischerVergleich}
+\end{table}
 
+\subsection{Wirtschaftliche Bewertung}
+\label{sec:WirtschaftlicheBewertung}
+Die wirtschaftliche Betrachtung basiert auf typischen Pflegevorgängen im
+Administrationsalltag. Für die Kalkulation wurden 60 Änderungsvorgänge pro
+Monat angesetzt. Vor der Projektdurchführung betrug der mittlere Aufwand pro
+Vorgang rund 10 Minuten, da Informationen zusammengesucht, Zuständigkeiten
+abgestimmt und Eingaben teilweise manuell nachgehalten werden mussten. Mit der
+neuen Anwendung sinkt der Bearbeitungsaufwand auf rund 4 Minuten, weil
+Suchaufwand, Mehrfacheingaben und Rückfragen reduziert werden.
 
-\subsubsection{\gqq{Make or Buy}-Entscheidung}
-\label{sec:MakeOrBuyEntscheidung}
-\begin{itemize}
-	\item Gibt es vielleicht schon ein fertiges Produkt, dass alle Anforderungen des Projekts abdeckt?
-	\item Wenn ja, wieso wird das Projekt trotzdem umgesetzt?
-\end{itemize}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{8.0cm}|r|}
+\hline
+\textbf{Kennzahl} & \textbf{Wert} \\
+\hline
+Pflegevorgänge pro Monat & 60 \\
+\hline
+Bearbeitungszeit vorher je Vorgang & 10 min \\
+\hline
+Bearbeitungszeit nachher je Vorgang & 4 min \\
+\hline
+Zeitersparnis je Vorgang & 6 min \\
+\hline
+Zeitersparnis pro Monat & 360 min = 6 h \\
+\hline
+\end{tabular}
+\caption{Grundlage der Wirtschaftlichkeitsbetrachtung}
+\label{tab:WirtschaftlichkeitGrundlage}
+\end{table}
 
+Für die Projektkosten wurde kein Stundenlohn, sondern ein interner
+kalkulatorischer Verrechnungssatz angesetzt. Für die 80 Projektstunden wurden
+\eur{65} pro Stunde angesetzt. Zusätzlich wurden sechs Stunden fachliche
+Begleitung und Abnahme mit \eur{85} pro Stunde bewertet. Daraus ergeben sich
+Projektkosten von \eur{5710}. Eine Detailrechnung ist im \Anhang{app:Wirtschaftlichkeit}
+dargestellt.
 
-\subsubsection{Projektkosten}
-\label{sec:Projektkosten}
-\begin{itemize}
-	\item Welche Kosten fallen bei der Umsetzung des Projekts im Detail an (\zB Entwicklung, Einführung/Schulung, Wartung)?
-\end{itemize}
+Bei einer monatlichen Einsparung von 6 Stunden und einem kalkulatorischen
+internen Satz von \eur{65} ergibt sich ein wirtschaftlicher Nutzen von
+\eur{390} pro Monat. Die Projektkosten amortisieren sich damit nach rund
+14{,}6 Monaten. Die Amortisationsdauer liegt für eine intern genutzte
+Verwaltungsanwendung im vertretbaren Bereich, weil neben der Zeitersparnis auch
+qualitative Effekte wie Nachvollziehbarkeit, Fehlervermeidung und
+Mandantentrennung erreicht werden.
 
-\paragraph{Beispielrechnung (verkürzt)}
-Die Kosten für die Durchführung des Projekts setzen sich sowohl aus Personal-, als auch aus Ressourcenkosten zusammen.
-In Absprache mit der Personalabteilung wird für einen Auszubildenden im dritten Lehrjahr ein Stundensatz von \eur{7,56} und für die anderen Mitarbeiter ein Stundensatz von \eur{25} angesetzt.
-Für die Nutzung von Ressourcen\footnote{Räumlichkeiten, Arbeitsplatzrechner etc.} wird ein Stundensatz von \eur{15} angenommen.
-Die Durchführungszeit des Projekts beträgt 70 Stunden.
-Eine Aufstellung der Kosten befindet sich in Tabelle~\ref{tab:Kostenaufstellung} und sie betragen insgesamt \eur{2739,20}.
-\tabelle{Kostenaufstellung}{tab:Kostenaufstellung}{Kostenaufstellung.tex}
-
-
-\subsubsection{Amortisationsdauer}
-\label{sec:Amortisationsdauer}
-\begin{itemize}
-	\item Welche monetären Vorteile bietet das Projekt (\zB Einsparung von Lizenzkosten, Arbeitszeitersparnis, bessere Usability, Korrektheit)?
-	\item Wann hat sich das Projekt amortisiert?
-\end{itemize}
-
-\paragraph{Beispielrechnung (verkürzt)}
-Bei einer Zeiteinsparung von 10 Minuten am Tag für jeden der 25 Anwender und 220 Arbeitstagen im Jahr ergibt sich eine gesamte Zeiteinsparung von 
-\begin{eqnarray}
-25 \cdot 220 \mbox{ Tage/Jahr} \cdot 10 \mbox{ min/Tag} = 55000 \mbox{ min/Jahr} \approx 917 \mbox{ h/Jahr} 
-\end{eqnarray}
-
-Dadurch ergibt sich eine jährliche Einsparung von 
-\begin{eqnarray}
-917 \mbox{h} \cdot \eur{(25 + 15)}{\mbox{/h}} = \eur{36680}
-\end{eqnarray}
-
-Die Amortisationszeit beträgt also $\frac{\eur{2739,20}}{\eur{36680}\mbox{/Jahr}} \approx 0,07 \mbox{ Jahre} \approx 4 \mbox{ Wochen}$.
-
-
-\subsection{Nutzwertanalyse}
+\subsection{Nutzwertanalyse und Entscheidung}
 \label{sec:Nutzwertanalyse}
-\begin{itemize}
-	\item Darstellung des nicht-monetären Nutzens (\zB Vorher-/Nachher-Vergleich anhand eines Wirtschaftlichkeitskoeffizienten). 
-\end{itemize}
+Da sich die Entscheidung nicht allein über die Bearbeitungszeit ableiten
+lässt, wurde zusätzlich eine Nutzwertanalyse durchgeführt. Bewertet wurden
+die Kriterien Nachvollziehbarkeit, Sicherheit, Passgenauigkeit des
+Funktionsumfangs, Bedienbarkeit und Wartbarkeit. Die gewichtete Auswertung ist
+im \Anhang{app:Variantenvergleich} enthalten.
 
-\paragraph{Beispiel}
-Ein Beispiel für eine Entscheidungsmatrix findet sich in Kapitel~\ref{sec:Architekturdesign}: \nameref{sec:Architekturdesign}.
+Die manuelle Pflege erzielt den niedrigsten Nutzwert, weil sie den bestehenden
+Problembestand unverändert fortschreibt. Die Standardlösung verbessert die
+Bedienung, erreicht jedoch nicht ohne Zusatzaufwand die geforderte
+Passgenauigkeit. Die Eigenentwicklung erzielt den höchsten Nutzwert, weil sie
+den Fachprozess zielgerichtet abbildet, technisch beherrschbar bleibt und ohne
+funktionsfremde Bestandteile eingeführt werden kann. Aus diesen Gründen wurde
+die Eigenentwicklung als wirtschaftlich und technisch sinnvollste Variante
+ausgewählt.
 
-
-\subsection{Anwendungsfälle}
-\label{sec:Anwendungsfaelle}
-\begin{itemize}
-	\item Welche Anwendungsfälle soll das Projekt abdecken?
-	\item Einer oder mehrere interessante (!) Anwendungsfälle könnten exemplarisch durch ein Aktivitätsdiagramm oder eine \ac{EPK} detailliert beschrieben werden. 
-\end{itemize}
-
-\paragraph{Beispiel}
-Ein Beispiel für ein Use Case-Diagramm findet sich im \Anhang{app:UseCase}.
-
-
-\subsection{Qualitätsanforderungen}
-\label{sec:Qualitaetsanforderungen}
-\begin{itemize}
-	\item Welche Qualitätsanforderungen werden an die Anwendung gestellt (\zB hinsichtlich Performance, Usability, Effizienz \etc (siehe \citet{ISO9126}))?
-\end{itemize}
-
-
-\subsection{Lastenheft/Fachkonzept}
-\label{sec:Lastenheft}
-\begin{itemize}
-	\item Auszüge aus dem Lastenheft/Fachkonzept, wenn es im Rahmen des Projekts erstellt wurde.
-	\item Mögliche Inhalte: Funktionen des Programms (Muss/Soll/Wunsch), User Stories, Benutzerrollen
-\end{itemize}
-
-\paragraph{Beispiel}
-Ein Beispiel für ein Lastenheft findet sich im \Anhang{app:Lastenheft}. 
+Für die Entscheidung war ausschlaggebend, dass die wirtschaftliche Bewertung
+nicht isoliert betrachtet wurde. Gerade im vorliegenden Umfeld wirken sich
+fehlerhafte Freigaben oder unklare Zuständigkeiten nicht nur auf die
+Bearbeitungszeit, sondern auch auf die Betriebssicherheit aus. Die
+Eigenentwicklung bietet deshalb den größten Gesamtnutzen, obwohl sie in der
+Einführungsphase höhere Initialkosten verursacht als die Fortführung des
+Bestandszustands.

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>Änderungshistorie</h3>
+    </div>
+    {% if audit_entries %}
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Zeit</th>
+            <th>Benutzer</th>
+            <th>Objekt</th>
+            <th>Aktion</th>
+            <th>Details</th>
+            <th>Rollback</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entry in audit_entries %}
+        <tr>
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.created_at }}</td>
+            <td>{{ entry.actor_email }}</td>
+            <td>{{ entry.entity_label }}</td>
+            <td>{{ entry.action }}</td>
+            <td><code>{{ entry.changes_json }}</code></td>
+            <td>
+                {% if entry.rollback_json %}
+                <form method="post" action="/audit/{{ entry.id }}/rollback">
+                    <button class="button-secondary" type="submit">Rollback</button>
+                </form>
+                {% else %}
+                <span class="muted">nicht verfügbar</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty">Noch keine Audit-Einträge vorhanden.</p>
+    {% endif %}
+</section>
+{% endblock %}

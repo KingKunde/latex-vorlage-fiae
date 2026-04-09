@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="panel">
+    <div class="section-header">
+        <h3>Organisation bearbeiten</h3>
+    </div>
+    <form method="post" action="/organizations/{{ organization.id }}/edit">
+        <div class="form-grid">
+            <div class="field">
+                <label for="name">Name</label>
+                <input id="name" name="name" value="{{ form_values.get('name', organization.name) }}" required>
+                <p class="field-error-slot {% if field_errors.get('name') %}is-visible{% endif %}">{{ field_errors.get("name", "") }}</p>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="button-primary" type="submit">Speichern</button>
+            <a class="button button-secondary" href="/organizations/page">Zurück</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

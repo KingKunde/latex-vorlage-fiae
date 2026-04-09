@@ -1,44 +1,87 @@
 % !TEX root = ../Projektdokumentation.tex
-\section{Einleitung}
-\label{sec:Einleitung}
+\section{Das Thema und Problemstellung}
+\label{sec:ThemaUndProblemstellung}
+Der Ausbildungsbetrieb betreibt und betreut Mail-Infrastrukturen für mehrere
+Organisationen. In diesem Umfeld müssen freigegebene Mail-Adressen und
+IP-Adressen regelmäßig angepasst werden, damit technische Ausnahmen im
+Antispam-Umfeld nachvollziehbar und wirksam gepflegt bleiben. Vor Beginn des
+Projekts erfolgte diese Pflege ohne zentrale Anwendung. Informationen waren auf
+mehrere Datenquellen verteilt, Änderungen wurden manuell übernommen und
+Rückfragen mussten häufig im direkten Austausch geklärt werden.
 
+Die Ausgangssituation war fachlich problematisch, weil dieselben Daten an
+verschiedenen Stellen gepflegt wurden und keine einheitliche Bedienlogik
+vorhanden war. Dadurch entstanden Medienbrüche, uneinheitliche Datenstände
+und ein zusätzlicher Abstimmungsaufwand zwischen den beteiligten
+Mitarbeitern. Gleichzeitig war nur eingeschränkt nachvollziehbar, wer eine
+Freigabe angelegt, geändert oder entfernt hatte. Für einen sicherheitsnahen
+Fachprozess ist dieser Zustand langfristig nicht tragfähig.
 
-\subsection{Projektumfeld} 
-\label{sec:Projektumfeld}
+\subsection{Zielstellung der Projektarbeit}
+\label{sec:Zielstellung}
+Ziel der Projektarbeit war die Entwicklung des
+\Fachbegriff{AntispamAdminCenter}, einer webbasierten Verwaltungsanwendung für
+die zentrale Pflege von Organisationen, Benutzern, Mail-Adressen und
+IP-Adressen. Die Anwendung sollte von internen Administratoren und
+autorisierten Organisationsbenutzern genutzt werden können und dabei eine
+eindeutige Trennung zwischen globalen und mandantenbezogenen Rechten
+sicherstellen.
+
+Aus dem Projektauftrag ergaben sich folgende Kernziele:
 \begin{itemize}
-	\item Kurze Vorstellung des Ausbildungsbetriebs (Geschäftsfeld, Mitarbeiterzahl \usw)
-	\item Wer ist Auftraggeber/Kunde des Projekts?
+  \item zentrale und einheitliche Pflege aller fachlich relevanten Stammdaten
+  \item rollenbasiertes Berechtigungskonzept mit Mandantentrennung
+  \item abgesicherte Anmeldung mit Session-Verwaltung und Passwort-Hashing
+  \item nachvollziehbare Protokollierung fachlicher Änderungen
+  \item Bereitstellung einer belastbaren Datenbasis für nachgelagerte Mail-Systeme
 \end{itemize}
 
+Das Projektergebnis sollte nicht nur die Bearbeitungszeit senken, sondern vor
+allem die Qualität der Datenhaltung verbessern. Neben der fachlichen Funktion
+stand daher die Beherrschbarkeit des Betriebsprozesses im Vordergrund.
 
-\subsection{Projektziel} 
-\label{sec:Projektziel}
-\begin{itemize}
-	\item Worum geht es eigentlich?
-	\item Was soll erreicht werden?
-\end{itemize}
+\subsection{Ist-Analyse}
+\label{sec:IstAnalyse}
+Die Ist-Analyse zeigte, dass die bisherige Vorgehensweise stark personenabhängig
+war. Änderungen wurden zwar fachlich abgestimmt, technisch jedoch nicht über
+eine dafür vorgesehene Anwendung umgesetzt. Daraus ergaben sich drei zentrale
+Schwachstellen.
 
+Erstens fehlte eine zentrale Datenhaltung für freigegebene Mail- und
+IP-Einträge. Zweitens war die Berechtigungsstruktur nicht systematisch
+abgebildet, so dass zwischen globalen Administratorrechten und
+organisationsbezogenen Zuständigkeiten nur eingeschränkt unterschieden werden
+konnte. Drittens existierte keine belastbare Historie, über die sich
+Änderungen und deren Verursacher im Nachhinein nachvollziehen ließen.
 
-\subsection{Projektbegründung} 
-\label{sec:Projektbegruendung}
-\begin{itemize}
-	\item Warum ist das Projekt sinnvoll (\zB Kosten- oder Zeitersparnis, weniger Fehler)?
-	\item Was ist die Motivation hinter dem Projekt?
-\end{itemize}
+Aus betrieblicher Sicht führte dies zu wiederkehrenden Rückfragen, manuellen
+Kontrollen und vermeidbaren Fehlerquellen. Die eigentliche Pflegeaufgabe war
+zwar fachlich überschaubar, der organisatorische Aufwand rund um Kontrolle,
+Abstimmung und Nacharbeit fiel jedoch unverhältnismäßig hoch aus.
 
+\subsection{Soll-Konzept}
+\label{sec:SollKonzept}
+Im Soll-Zustand soll eine zentrale Webanwendung den gesamten Pflegeprozess
+unterstützen. Organisationen, Benutzer, Mail-Adressen und IP-Adressen werden
+in einer gemeinsamen Datenbasis verwaltet und über einheitliche Formulare
+gepflegt. Rollen und Organisationszuordnung steuern, welche Daten angezeigt und
+geändert werden dürfen. Fachliche Änderungen werden revisionsfähig im
+Audit-Log festgehalten.
 
-\subsection{Projektschnittstellen} 
-\label{sec:Projektschnittstellen}
-\begin{itemize}
-	\item Mit welchen anderen Systemen interagiert die Anwendung (technische Schnittstellen)?
-	\item Wer genehmigt das Projekt \bzw stellt Mittel zur Verfügung? 
-	\item Wer sind die Benutzer der Anwendung?
-	\item Wem muss das Ergebnis präsentiert werden?
-\end{itemize}
+Technisch wurde eine schlanke Webanwendung auf Basis von FastAPI, SQLModel und
+SQLite vorgesehen. Diese Kombination war für den Projektumfang geeignet, weil
+sie eine schnelle Umsetzung, klare Trennung zwischen Datenmodell, Fachlogik und
+Webschicht sowie einfache Testbarkeit ermöglicht. Nicht Bestandteil des
+Projekts sind die eigentliche Spam-Filterlogik, ein produktionsreifes
+Mehrserver-Deployment oder die Migration beliebiger Altdatenbestände.
 
-
-\subsection{Projektabgrenzung} 
+\subsection{Projektabgrenzung}
 \label{sec:Projektabgrenzung}
-\begin{itemize}
-	\item Was ist explizit nicht Teil des Projekts (\insb bei Teilprojekten)?
-\end{itemize}
+Das Projekt umfasst die Entwicklung einer intern nutzbaren
+Verwaltungsanwendung einschließlich Rollenmodell, Auditierung und
+Kundendokumentation. Nicht Gegenstand der Projektarbeit sind der produktive
+Betrieb einer hochverfügbaren Infrastruktur, eine allgemeine
+Mandantenmigration aus Fremdsystemen oder die technische Umsetzung aller
+denkbaren Schnittstellen zu nachgelagerten Mail-Systemen. Diese Abgrenzung war
+erforderlich, um den Projektumfang auf einen in 80 Stunden realisierbaren und
+bewertbaren Kern zu konzentrieren.

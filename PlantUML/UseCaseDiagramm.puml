@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+actor Gast
+actor Benutzer
+actor Admin
+actor Superadmin
+
+Admin --|> Benutzer
+Superadmin --|> Admin
+
+rectangle "Antispam Admin Center" {
+  usecase "Anmelden" as UC_Login
+  usecase "Abmelden" as UC_Logout
+  usecase "Dashboard anzeigen" as UC_Dashboard
+  usecase "Eigene Kontodaten bearbeiten" as UC_EditOwnAccount
+  usecase "Mail-Adressen anzeigen" as UC_ViewMailAddresses
+  usecase "Mail-Adressen verwalten" as UC_ManageMailAddresses
+  usecase "Benutzer anzeigen" as UC_ViewUsers
+  usecase "Benutzer verwalten" as UC_ManageUsers
+  usecase "Organisationen anzeigen" as UC_ViewOrganizations
+  usecase "Organisationen verwalten" as UC_ManageOrganizations
+}
+
+Gast --> UC_Login
+
+Benutzer --> UC_Logout
+Benutzer --> UC_Dashboard
+Benutzer --> UC_EditOwnAccount
+Benutzer --> UC_ViewMailAddresses
+
+Admin --> UC_ManageMailAddresses
+Admin --> UC_ViewUsers
+Admin --> UC_ManageUsers
+
+Superadmin --> UC_ViewOrganizations
+Superadmin --> UC_ManageOrganizations
+
+UC_ManageUsers .> UC_ViewUsers : <<include>>
+UC_ManageOrganizations .> UC_ViewOrganizations : <<include>>
+
+note right of UC_EditOwnAccount
+  Entspricht der Selbstbearbeitung
+  des eigenen Benutzerkontos.
+end note
+
+note right of UC_ManageMailAddresses
+  Umfasst Anlegen, Aendern
+  und Loeschen von Mail-Adressen.
+end note
+
+note right of UC_ManageUsers
+  Umfasst Anlegen, Aendern
+  und Loeschen von Benutzern
+  innerhalb des zulaessigen
+  Berechtigungsbereichs.
+end note
+
+note right of UC_ManageOrganizations
+  Nur fuer Superadmins.
+  Umfasst Anlegen, Aendern
+  und Loeschen von Organisationen.
+end note
+
+@enduml

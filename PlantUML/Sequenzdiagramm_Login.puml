@@ -1,0 +1,56 @@
+@startuml
+skinparam shadowing false
+autonumber
+
+actor Gast
+boundary "AuthRouter\n/api/auth.py" as AuthRouter
+control "Authentication\nauthenticate_user()" as Authentication
+control "LoginSecurity" as LoginSecurity
+database "SQLite" as DB
+collections "Session" as SessionStore
+
+Gast -> AuthRouter : POST /login(email, password)
+AuthRouter -> Authentication : authenticate_user(session, request, email, password)
+Authentication -> Authentication : identifier normalisieren
+Authentication -> LoginSecurity : login_rate_limited(ip)
+
+alt IP ist rate-limited
+  Authentication -> LoginSecurity : audit_login_attempt(..., rate_limited)
+  LoginSecurity -> DB : LoginAudit speichern
+  Authentication --> AuthRouter : Fehler "Zu viele Login-Versuche"
+  AuthRouter --> Gast : Redirect auf /login?error=...
+else IP nicht rate-limited
+  Authentication -> LoginSecurity : is_account_locked(identifier)
+  LoginSecurity -> DB : LoginSecurityState lesen
+
+  alt Konto ist gesperrt
+    Authentication -> LoginSecurity : register_failed_login_attempt(ip)
+    Authentication -> LoginSecurity : audit_login_attempt(..., account_locked)
+    LoginSecurity -> DB : LoginAudit speichern
+    Authentication --> AuthRouter : Fehler "Konto gesperrt"
+    AuthRouter --> Gast : Redirect auf /login?error=...
+  else Konto nicht gesperrt
+    Authentication -> DB : User nach E-Mail laden
+
+    alt Benutzer fehlt oder Passwort falsch
+      Authentication -> LoginSecurity : register_failed_login_attempt(ip)
+      Authentication -> LoginSecurity : record_login_failure(identifier)
+      LoginSecurity -> DB : Sperrstatus aktualisieren
+      Authentication -> LoginSecurity : audit_login_attempt(..., invalid_credentials)
+      LoginSecurity -> DB : LoginAudit speichern
+      Authentication --> AuthRouter : Fehler "E-Mail oder Passwort ist falsch"
+      AuthRouter --> Gast : Redirect auf /login?error=...
+    else Benutzer und Passwort korrekt
+      Authentication -> LoginSecurity : reset_login_failures(identifier)
+      LoginSecurity -> DB : Sperrstatus zuruecksetzen
+      Authentication -> LoginSecurity : audit_login_attempt(..., login_success)
+      LoginSecurity -> DB : LoginAudit speichern
+      Authentication --> AuthRouter : AuthenticationResult(user)
+      AuthRouter -> SessionStore : Session leeren
+      AuthRouter -> SessionStore : user_id und last_seen_at speichern
+      AuthRouter --> Gast : Redirect auf /dashboard
+    end
+  end
+end
+
+@enduml

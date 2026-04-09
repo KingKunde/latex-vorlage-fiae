@@ -1,0 +1,164 @@
+@startuml
+left to right direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "Entry Points" {
+  class AuthRouter <<router>> {
+    + login()
+    + logout()
+  }
+
+  class UsersRouter <<router>> {
+    + users_page()
+    + create_user_page()
+    + update_user_page()
+    + delete_user_page()
+  }
+
+  class OrganizationsRouter <<router>> {
+    + organizations_page()
+    + create_organization_page()
+    + update_organization_page()
+    + delete_organization_page()
+  }
+
+  class MailAddressesRouter <<router>> {
+    + mail_addresses_page()
+    + create_mail_address_page()
+    + update_mail_address_page()
+    + delete_mail_address_page()
+  }
+}
+
+package "Application" {
+  class Authentication <<service>> {
+    + authenticate_user()
+    + start_authenticated_session()
+  }
+
+  class LoginSecurity <<service>> {
+    + login_rate_limited()
+    + is_account_locked()
+    + audit_login_attempt()
+    + record_login_failure()
+    + reset_login_failures()
+  }
+
+  class UserManagement <<service>> {
+    + create_user_account()
+    + update_user_account()
+    + delete_user_account()
+  }
+
+  class OrganizationManagement <<service>> {
+    + create_organization_entry()
+    + update_organization_entry()
+    + delete_organization_entry()
+  }
+
+  class MailAddressManagement <<service>> {
+    + create_mail_address_entry()
+    + update_mail_address_entry()
+    + delete_mail_address_entry()
+  }
+
+  class UserCreateData <<dataclass>> {
+    first_name : str
+    last_name : str
+    email : str
+    password_hash : str
+    organisation_id : int?
+    role : str
+  }
+
+  class ValidationErrors <<dataclass>> {
+    field_errors : dict[str, str]
+    + first_error
+  }
+}
+
+package "Domain" {
+  class User <<entity>> {
+    id : int
+    username : str
+    first_name : str
+    last_name : str
+    email : str
+    is_bootstrap_admin : bool
+    password_hash : str
+    organisation_id : int?
+    role : str
+  }
+
+  class Organization <<entity>> {
+    id : int
+    name : str
+  }
+
+  class MailAddressEntry <<entity>> {
+    id : int
+    email : str
+    organisation_id : int
+    is_active : bool
+  }
+
+  class LoginAudit <<entity>> {
+    id : int
+    username : str
+    user_id : int?
+    success : bool
+    reason : str
+  }
+
+  class LoginSecurityState <<entity>> {
+    id : int
+    username : str
+    failed_attempts : int
+    locked_until : datetime?
+  }
+}
+
+package "Persistence Services" {
+  class UserCommands <<repository>> {
+    + create_user()
+    + update_user()
+    + update_user_password()
+    + delete_user()
+  }
+
+  class UserQueries <<repository>> {
+    + get_users()
+    + get_user_by_email()
+    + get_user_or_404()
+  }
+}
+
+AuthRouter ..> Authentication
+UsersRouter ..> UserManagement
+OrganizationsRouter ..> OrganizationManagement
+MailAddressesRouter ..> MailAddressManagement
+
+Authentication ..> LoginSecurity
+Authentication ..> UserQueries
+Authentication --> User
+LoginSecurity --> LoginAudit
+LoginSecurity --> LoginSecurityState
+
+UserManagement ..> UserCommands
+UserManagement ..> UserQueries
+UserManagement --> UserCreateData
+UserManagement --> ValidationErrors
+UserManagement --> User
+
+OrganizationManagement --> Organization
+OrganizationManagement --> ValidationErrors
+
+MailAddressManagement --> MailAddressEntry
+MailAddressManagement --> ValidationErrors
+
+Organization "1" <-- "0..*" User
+Organization "1" <-- "0..*" MailAddressEntry
+User "1" <-- "0..*" LoginAudit
+
+@enduml

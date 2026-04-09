@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+skinparam shadowing false
+
+actor Benutzer
+
+component "Browser UI\n(HTML, CSS, JS)" as UI
+component "FastAPI Web Layer\nlayer_1_entrypoints" as Web
+component "Application Services\nlayer_2_application" as App
+component "Domain Model\nlayer_3_domain" as Domain
+component "Infrastructure\nlayer_4_infrastructure" as Infra
+database "SQLite\napp/database.db" as DB
+component "Postfix Export\npostfix_export.py" as Export
+file "mail_addresses.txt" as ExportFile
+
+Benutzer --> UI
+UI --> Web
+Web --> App
+App --> Domain
+App --> Infra
+Infra --> DB
+App --> DB
+App --> Export
+Export --> ExportFile
+
+note bottom of Web
+  Router, Form-Handling,
+  Templates und Session-Zugriff.
+end note
+
+note bottom of App
+  Authentifizierung, Validierung,
+  Berechtigungen und Fachlogik.
+end note
+
+note bottom of Domain
+  Zentrale Entitaeten und Rollenmodell.
+end note
+
+@enduml
