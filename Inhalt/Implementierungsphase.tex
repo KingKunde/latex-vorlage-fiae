@@ -8,23 +8,52 @@ Validierung, Benutzerverwaltung, Rollenprüfung und die Pflegeprozesse. So
 konnte jeder Teilbereich einzeln umgesetzt und getestet werden, bevor er in der
 Weboberfläche genutzt wurde.
 
+Die fachliche Logik wurde nicht direkt in den Routen oder Templates
+implementiert, sondern in Service-Funktionen ausgelagert. Dadurch greifen
+Weboberfläche und API auf dieselben Prüfungen zurück. Für die
+Benutzerverwaltung wurden die Rollen Root, Admin und User umgesetzt. Root kann
+firmenübergreifend arbeiten, Admin verwaltet Benutzer und Fachobjekte innerhalb
+der zugeordneten Firma, und User bleibt auf die eigene Firma und die erlaubten
+Pflegefunktionen beschränkt. Die Firmenzuordnung wird in der Datenbank beim
+Benutzer gespeichert und nach der Anmeldung über die Session dem aktuellen
+Benutzerkontext zugeordnet.
+
+Beim Lesen von Mail- und IP-Adressen werden die sichtbaren Datensätze anhand
+dieses angemeldeten Benutzers gefiltert. Vor dem Ändern eines Datensatzes wird
+zusätzlich geprüft, ob der Benutzer die betroffene Firma bearbeiten darf.
+Dadurch wird die Mandantentrennung nicht nur optisch in der Oberfläche, sondern
+auch serverseitig durchgesetzt. Der zugehörige Quelltextauszug ist in
+Quelltextauszug~\ref{lst:permissions} im \Anhang{app:CodeAuthentifizierung}
+dargestellt, weil dort die Filterung sichtbarer Daten und die Prüfung vor
+Änderungen direkt zusammengeführt sind.
+
 Ein Schwerpunkt lag auf der Anmeldung und Absicherung der Benutzerkonten. Die
 Anwendung nutzt Session-Login, Passwort-Hashing mit Argon2, Login-Audit sowie
 Schutzmechanismen gegen wiederholte Fehlanmeldungen. Damit wird verhindert,
 dass sensible Verwaltungsfunktionen ohne ausreichenden Schutz erreichbar sind.
+Bei der Anmeldung wird die E-Mail-Adresse zuerst vereinheitlicht. Anschließend
+prüft die Anwendung, ob für die IP-Adresse oder das Benutzerkonto bereits eine
+Sperre aktiv ist. Erst danach wird das Passwort gegen den gespeicherten Hash
+geprüft und bei Erfolg eine neue Session angelegt. Fehlgeschlagene und
+erfolgreiche Anmeldeversuche werden protokolliert, damit sicherheitsrelevante
+Vorgänge nachvollziehbar bleiben. Die Umsetzung ist in
+Quelltextauszug~\ref{lst:auth-session} und
+Quelltextauszug~\ref{lst:login-security} im
+\Anhang{app:CodeAuthentifizierung} referenziert. Diese Stellen sind relevant,
+weil sie den Übergang von einer reinen Eingabeprüfung zur geschützten
+Benutzersession zeigen.
 
-\subsection{Implementierung der Benutzer- und Mandantenverwaltung}
-\label{sec:ImplementierungMandantenverwaltung}
-Die Benutzer- und Mandantenverwaltung ist ein zentraler Teil der Anwendung.
-Firmen können angelegt, geändert und getrennt verwaltet werden.
-Benutzer erhalten Rollen und werden bestimmten Firmen zugeordnet. Auf
-dieser Grundlage steuert die Anwendung, welche Datensätze jemand sehen oder
-bearbeiten darf.
-
-Für Mail- und IP-Einträge wurden eigene Verwaltungsfunktionen umgesetzt. Sie
-prüfen Eingaben und protokollieren Änderungen. Dadurch werden ungültige Daten
-früh erkannt und die nachgelagerten Mail-Systeme können auf eine einheitliche
-Datenbasis zugreifen.
+Für fachliche Änderungen wurde ein Audit-Log umgesetzt. Beim Anlegen, Ändern
+oder Löschen von Firmen, Benutzern, Mail-Adressen und IP-Adressen wird ein
+Eintrag mit Benutzerbezug, Aktion und Änderungsdaten geschrieben. Sensible
+Felder wie Passwörter werden vor der Protokollierung maskiert. Für ausgewählte
+Änderungen werden außerdem die Informationen gespeichert, die für ein
+kontrolliertes Zurücksetzen benötigt werden. Dadurch kann nicht nur der aktuelle
+Stand gepflegt, sondern auch die Entstehung eines Datenstands nachvollzogen
+werden. Die Maskierung sensibler Felder und das Schreiben des Audit-Eintrags
+sind in Quelltextauszug~\ref{lst:audit-redaction} und
+Quelltextauszug~\ref{lst:audit-create} dargestellt. Der dazugehörige Rollback
+ist in Quelltextauszug~\ref{lst:audit-rollback} enthalten.
 
 \subsection{Erzielte Projektergebnisse}
 \label{sec:ErzielteProjektergebnisse}
@@ -36,9 +65,7 @@ Mail-Adressen und IP-Adressen können zentral verwaltet werden. Fachliche
 
 Zusammenfassend wurde damit nicht nur eine neue Eingabemaske geschaffen. Der
 bisher manuelle Pflegeprozess wurde in eine strukturierte Anwendung mit
-Rechtekonzept, Prüfung der Eingaben und Änderungshistorie überführt. Die
-wichtigsten Quelltextauszüge zu Datenschutz und Sicherheit befinden sich im
-\Anhang{app:CodeAuthentifizierung}.
+Rechtekonzept, Prüfung der Eingaben und Änderungshistorie überführt.
 
 Während der Implementierung zeigte sich, dass die Trennung zwischen
 firmenbezogenen und globalen Rechten nicht nur in der Oberfläche

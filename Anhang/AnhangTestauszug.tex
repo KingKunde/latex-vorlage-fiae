@@ -1,0 +1,15 @@
+\subsection{Testauszug}
+\label{app:Testauszug}
+
+Der folgende Pytest-Auszug prüft den Zugriff auf die Benutzerverwaltung. Ein
+Admin darf einen Benutzer anlegen. Anschließend wird geprüft, dass der neu
+angelegte Benutzer mit der Rolle \Code{User} keinen Zugriff auf die
+Benutzerverwaltung und das Anlegen weiterer Benutzer erhält.
+
+\lstinputlisting[
+  language=Python,
+  firstline=69,
+  lastline=111,
+  firstnumber=69,
+  caption={Automatisierter Test der Benutzerrechte}
+]{PROJEKT/tests/test_user_access.py}

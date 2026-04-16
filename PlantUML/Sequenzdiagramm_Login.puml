@@ -10,45 +10,115 @@ database "SQLite" as DB
 collections "Session" as SessionStore
 
 Gast -> AuthRouter : POST /login(email, password)
+activate AuthRouter
 AuthRouter -> Authentication : authenticate_user(session, request, email, password)
+activate Authentication
 Authentication -> Authentication : identifier normalisieren
 Authentication -> LoginSecurity : login_rate_limited(ip)
+activate LoginSecurity
+LoginSecurity --> Authentication : Rate-Limit-Status
+deactivate LoginSecurity
 
 alt IP ist rate-limited
   Authentication -> LoginSecurity : audit_login_attempt(..., rate_limited)
+  activate LoginSecurity
   LoginSecurity -> DB : LoginAudit speichern
+  activate DB
+  DB --> LoginSecurity : gespeichert
+  deactivate DB
+  LoginSecurity --> Authentication : Audit abgeschlossen
+  deactivate LoginSecurity
   Authentication --> AuthRouter : Fehler "Zu viele Login-Versuche"
+  deactivate Authentication
   AuthRouter --> Gast : Redirect auf /login?error=...
+  deactivate AuthRouter
 else IP nicht rate-limited
   Authentication -> LoginSecurity : is_account_locked(identifier)
+  activate LoginSecurity
   LoginSecurity -> DB : LoginSecurityState lesen
+  activate DB
+  DB --> LoginSecurity : Sperrstatus
+  deactivate DB
+  LoginSecurity --> Authentication : Konto-Sperrstatus
+  deactivate LoginSecurity
 
   alt Konto ist gesperrt
     Authentication -> LoginSecurity : register_failed_login_attempt(ip)
+    activate LoginSecurity
+    LoginSecurity --> Authentication : IP-Fehlversuch registriert
+    deactivate LoginSecurity
     Authentication -> LoginSecurity : audit_login_attempt(..., account_locked)
+    activate LoginSecurity
     LoginSecurity -> DB : LoginAudit speichern
+    activate DB
+    DB --> LoginSecurity : gespeichert
+    deactivate DB
+    LoginSecurity --> Authentication : Audit abgeschlossen
+    deactivate LoginSecurity
     Authentication --> AuthRouter : Fehler "Konto gesperrt"
+    deactivate Authentication
     AuthRouter --> Gast : Redirect auf /login?error=...
+    deactivate AuthRouter
   else Konto nicht gesperrt
     Authentication -> DB : User nach E-Mail laden
+    activate DB
+    DB --> Authentication : User oder kein Treffer
+    deactivate DB
 
     alt Benutzer fehlt oder Passwort falsch
       Authentication -> LoginSecurity : register_failed_login_attempt(ip)
+      activate LoginSecurity
+      LoginSecurity --> Authentication : IP-Fehlversuch registriert
+      deactivate LoginSecurity
       Authentication -> LoginSecurity : record_login_failure(identifier)
+      activate LoginSecurity
       LoginSecurity -> DB : Sperrstatus aktualisieren
+      activate DB
+      DB --> LoginSecurity : aktualisiert
+      deactivate DB
+      LoginSecurity --> Authentication : Fehlversuch gespeichert
+      deactivate LoginSecurity
       Authentication -> LoginSecurity : audit_login_attempt(..., invalid_credentials)
+      activate LoginSecurity
       LoginSecurity -> DB : LoginAudit speichern
+      activate DB
+      DB --> LoginSecurity : gespeichert
+      deactivate DB
+      LoginSecurity --> Authentication : Audit abgeschlossen
+      deactivate LoginSecurity
       Authentication --> AuthRouter : Fehler "E-Mail oder Passwort ist falsch"
+      deactivate Authentication
       AuthRouter --> Gast : Redirect auf /login?error=...
+      deactivate AuthRouter
     else Benutzer und Passwort korrekt
       Authentication -> LoginSecurity : reset_login_failures(identifier)
+      activate LoginSecurity
       LoginSecurity -> DB : Sperrstatus zuruecksetzen
+      activate DB
+      DB --> LoginSecurity : zurueckgesetzt
+      deactivate DB
+      LoginSecurity --> Authentication : Fehlversuche geloescht
+      deactivate LoginSecurity
       Authentication -> LoginSecurity : audit_login_attempt(..., login_success)
+      activate LoginSecurity
       LoginSecurity -> DB : LoginAudit speichern
+      activate DB
+      DB --> LoginSecurity : gespeichert
+      deactivate DB
+      LoginSecurity --> Authentication : Audit abgeschlossen
+      deactivate LoginSecurity
       Authentication --> AuthRouter : AuthenticationResult(user)
+      deactivate Authentication
       AuthRouter -> SessionStore : Session leeren
+      activate SessionStore
+      SessionStore --> AuthRouter : geleert
+      deactivate SessionStore
       AuthRouter -> SessionStore : user_id und last_seen_at speichern
+      activate SessionStore
+      SessionStore --> AuthRouter : gespeichert
+      deactivate SessionStore
       AuthRouter --> Gast : Redirect auf /dashboard
+      deactivate AuthRouter
     end
   end
 end

@@ -38,10 +38,15 @@ Das Datenbankmodell ist im \Anhang{app:Datenbankmodell} dokumentiert.
 \label{sec:EntwurfBenutzeroberflaeche}
 Die Benutzeroberfläche wurde bewusst einfach gehalten. Im Mittelpunkt stand,
 dass Daten schnell und mit möglichst wenigen Fehlern erfasst werden können.
-Die Navigation führt direkt zu den Kernbereichen Dashboard, Firmen,
-Benutzer, Mail-Adressen, IP-Adressen und Audit-Log. Die einzelnen Masken sind
-formularbasiert aufgebaut und orientieren sich an den täglichen
-Pflegevorgängen des Fachprozesses.
+Die Oberfläche wurde mit einem festen Navigationsbereich und einem zentralen
+Inhaltsbereich entworfen. Bei einem Wechsel zwischen Dashboard, Firmen,
+Benutzern, Mail-Adressen, IP-Adressen und Audit-Log soll nur der fachliche
+Inhaltsbereich ausgetauscht werden, während Navigation und Grundlayout
+erhalten bleiben. Dadurch muss nicht die gesamte Seite neu aufgebaut werden,
+was die Bedienung bei Bereichswechseln beschleunigt und unnötige
+Datenübertragungen reduziert. Zur Abstimmung des grundsätzlichen Aufbaus wurde vor der
+Umsetzung ein Mockup erstellt. Dieses zeigt die geplante Navigation und die
+tabellarische Pflegeansicht und ist im \Anhang{app:ProjektMockup} dargestellt.
 
 Fehler werden direkt an den betroffenen Eingabefeldern angezeigt. Dadurch
 fallen falsche E-Mail-Adressen, ungültige IP-Adressen oder unvollständige

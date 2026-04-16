@@ -11,9 +11,29 @@ Diese Mischung war für das Projekt passend, weil sie sowohl die fachlichen
 Regeln als auch die Bedienung abdeckt. Die automatisierten Tests helfen dabei,
 Fehler bei späteren Änderungen schneller zu erkennen. Die manuellen Tests
 waren zusätzlich notwendig, um Sichtbarkeiten, Navigation und Fehlermeldungen
-im Zusammenspiel der einzelnen Bereiche zu prüfen. Auszüge aus den
-sicherheitsrelevanten Kernfunktionen befinden sich im
-\Anhang{app:CodeAuthentifizierung}.
+im Zusammenspiel der einzelnen Bereiche zu prüfen. Ein Auszug aus dem
+automatisierten Zugriffstest befindet sich im \Anhang{app:Testauszug}.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{4.0cm}|p{4.0cm}|p{4.0cm}|c|}
+\hline
+\textbf{Testfall} & \textbf{Erwartet} & \textbf{Tatsächlich} & \textbf{Check} \\
+\hline
+Admin legt Benutzer an & Benutzer wird gespeichert und zur Benutzerliste weitergeleitet & HTTP 303 auf \Code{/users/page}, Benutzer in Datenbank vorhanden & OK \\
+\hline
+Rolle und Firmenzuordnung & Neuer Benutzer besitzt Rolle \Code{User} und die richtige Firmen-ID & Rolle und Firmen-ID entsprechen den Testdaten & OK \\
+\hline
+Passwortspeicherung & Passwort wird nicht im Klartext gespeichert, sondern als Hash geprüft & \Code{verify\_password} bestätigt den gespeicherten Hash & OK \\
+\hline
+User öffnet Benutzerverwaltung & Zugriff wird verweigert & HTTP 403 & OK \\
+\hline
+User legt weiteren Benutzer an & Zugriff wird verweigert & HTTP 403 & OK \\
+\hline
+\end{tabular}
+\caption{Auszug der automatisierten Zugriffstests}
+\label{tab:Testauszug}
+\end{table}
 
 \subsection{Soll-Ist-Vergleich von Leistung, Zeit und Inhalt}
 \label{sec:SollIstVergleich}
@@ -49,6 +69,19 @@ Projektverlauf wurde etwas mehr Wert auf Sicherheit und Nachvollziehbarkeit
 gelegt. Das war sinnvoll, weil bei einer zentralen Verwaltungsanwendung klar
 sein muss, wer welche Daten bearbeiten darf und welche Änderungen später
 nachvollzogen werden können.
+
+\subsection{Übergabe und Abnahme}
+\label{sec:UebergabeUndAbnahme}
+Nach Abschluss der Implementierung wurde die Anwendung dem Auftraggeber
+vorgeführt. Dabei wurden die zentralen Abläufe gemeinsam durchgegangen:
+Anmeldung, Pflege von Firmen, Benutzern, Mail-Adressen und IP-Adressen,
+Rollenprüfung sowie Nachvollziehbarkeit über das Audit-Log. Die Rückmeldungen
+aus dem Review waren positiv, da die bisher manuelle Pflege, nachvollziehbarer
+und einheitlicher abgebildet wurde.
+
+Das Projektergebnis wurde fachlich abgenommen. Offene Punkte betrafen keine
+fehlenden Kernfunktionen, sondern mögliche spätere Erweiterungen für einen
+produktiven Ausbau.
 
 \subsection{Bewertung der Testergebnisse}
 \label{sec:BewertungTestergebnisse}

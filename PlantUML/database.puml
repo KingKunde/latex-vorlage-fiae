@@ -3,60 +3,92 @@ hide circle
 skinparam shadowing false
 skinparam linetype ortho
 
-entity "organisation" as organisation {
-  * id : int
+entity "organization" as organization {
+  * id : INTEGER
   --
-  name : str
+  name : VARCHAR
 }
 
 entity "users" as users {
-  * id : int
+  * id : INTEGER
   --
-  username : str
-  first_name : str
-  last_name : str
-  email : str
-  is_bootstrap_admin : bool
-  password_hash : str
-  organisation_id : int?
-  role : str
+  username : VARCHAR
+  first_name : VARCHAR
+  last_name : VARCHAR
+  email : VARCHAR
+  is_root : BOOLEAN
+  password_hash : VARCHAR
+  organization_id : INTEGER
+  role : VARCHAR
 }
 
 entity "mail_addresses" as mail_addresses {
-  * id : int
+  * id : INTEGER
   --
-  email : str
-  organisation_id : int
-  is_active : bool
+  email : VARCHAR
+  organization_id : INTEGER
+  is_active : BOOLEAN
+}
+
+entity "ip_addresses" as ip_addresses {
+  * id : INTEGER
+  --
+  ip_address : VARCHAR
+  organization_id : INTEGER
+  is_active : BOOLEAN
+}
+
+entity "audit_log" as audit_log {
+  * id : INTEGER
+  --
+  entity_type : VARCHAR
+  entity_id : INTEGER
+  action : VARCHAR
+  actor_user_id : INTEGER
+  actor_email : VARCHAR
+  organization_id : INTEGER
+  changes_json : VARCHAR
+  rollback_json : VARCHAR
+  created_at : DATETIME
 }
 
 entity "login_audit" as login_audit {
-  * id : int
+  * id : INTEGER
   --
-  username : str
-  user_id : int?
-  success : bool
-  reason : str
-  ip_address : str?
-  user_agent : str?
-  created_at : datetime
+  username : VARCHAR
+  user_id : INTEGER
+  success : BOOLEAN
+  reason : VARCHAR
+  ip_address : VARCHAR
+  user_agent : VARCHAR
+  created_at : DATETIME
 }
 
 entity "login_security_state" as login_security_state {
-  * id : int
+  * id : INTEGER
   --
-  username : str <<unique>>
-  failed_attempts : int
-  locked_until : datetime?
-  last_failed_at : datetime?
+  username : VARCHAR
+  failed_attempts : INTEGER
+  locked_until : DATETIME
+  last_failed_at : DATETIME
 }
 
-organisation ||--o{ users : "ordnet zu"
-organisation ||--o{ mail_addresses : "enthaelt"
+organization ||--o{ users : "ordnet zu"
+organization ||--o{ mail_addresses : "enthaelt"
+organization ||--o{ ip_addresses : "enthaelt"
+organization ||--o{ audit_log : "betrifft"
 users ||--o{ login_audit : "verursacht"
+users ||--o{ audit_log : "erstellt"
+
+note right of audit_log
+  Speichert fachliche Aenderungen
+  inklusive alter und neuer Werte.
+  rollback_json enthaelt optionale
+  Daten zum Zuruecksetzen.
+end note
 
 note right of login_audit
-  Audit-Eintraege koennen auch ohne
+  Login-Eintraege koennen auch ohne
   aufloesbaren Benutzer entstehen,
   z. B. bei falscher E-Mail-Adresse.
 end note

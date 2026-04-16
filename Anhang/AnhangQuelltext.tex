@@ -1,95 +1,67 @@
-\subsection{Quelltextauszug zu Datenschutz und Sicherheit}
+% !TEX root = ../Projektdokumentation.tex
+\subsection{Quelltextauszüge zu Datenschutz und Sicherheit}
 \label{app:CodeAuthentifizierung}
 
-Die folgenden Auszüge zeigen die sicherheitsrelevanten Kernfunktionen der
-Anwendung. Sie sind nicht als vollständiger Quelltextabdruck gedacht, sondern
-folgen dem Ablauf eines geschützten Pflegevorgangs: Anmeldung, Prüfung der
-Berechtigung, Änderung von Daten, Protokollierung und optionales
-Zurücksetzen.
+Die folgenden Auszüge zeigen ausgewählte Kernstellen der Implementierung. Sie
+sind bewusst gekürzt und dienen als Nachweis für die im Kapitel
+\ref{sec:ImplementierungKernfunktionen} beschriebenen Entscheidungen.
 
-\subsubsection*{Anmeldung und Session}
-Der Einstieg in die Anwendung erfolgt über die Login-Funktion. Die E-Mail-Adresse
-wird normalisiert, danach werden Rate-Limit, Kontosperre und Passwortprüfung
-durchlaufen. Erst bei erfolgreicher Prüfung wird eine neue Session gestartet.
+\subsubsection*{Authentifizierung und Session}
+Der Auszug zeigt den zentralen Login-Ablauf mit Normalisierung der
+E-Mail-Adresse, Prüfung von Rate-Limit und Kontosperre, Passwortprüfung sowie
+Start der Benutzersession.
 
 \lstinputlisting[
   language=Python,
   firstline=25,
-  lastline=91,
+  lastline=93,
   firstnumber=25,
-  caption={Authentifizierung und Start der Benutzersession}
+  caption={Authentifizierung und Start der Benutzersession},
+  label={lst:auth-session}
 ]{PROJEKT/app/services/authentication.py}
 \clearpage
 
-\subsubsection*{Passwortschutz}
-Passwörter werden nicht im Klartext gespeichert. Beim Anlegen oder Ändern eines
-Benutzers wird das Passwort gehasht. Zusätzlich gelten Mindestanforderungen an
-die Passwortstärke.
+\subsubsection*{Login-Schutz und Login-Audit}
+Dieser Auszug zeigt, wie wiederholte Fehlanmeldungen begrenzt, Kontosperren
+gespeichert und Login-Versuche protokolliert werden.
 
 \lstinputlisting[
   language=Python,
-  firstline=1,
-  lastline=27,
-  firstnumber=1,
-  caption={Hashing und Prüfung der Passwortstärke}
-]{PROJEKT/app/services/passwords.py}
-\clearpage
-
-\subsubsection*{Schutz gegen wiederholte Fehlanmeldungen}
-Die Login-Sicherheit arbeitet auf zwei Ebenen. Wiederholte Fehlversuche von
-einer IP-Adresse werden zeitlich begrenzt gezählt. Zusätzlich wird je Konto
-gespeichert, ob eine Sperre aktiv ist. Jeder Login-Versuch wird protokolliert.
-
-\lstinputlisting[
-  language=Python,
-  firstline=19,
+  firstline=29,
   lastline=89,
-  firstnumber=19,
-  caption={Rate-Limit, Kontosperre und Login-Audit}
+  firstnumber=29,
+  caption={Rate-Limit, Kontosperre und Login-Audit},
+  label={lst:login-security}
 ]{PROJEKT/app/services/login_security.py}
 \clearpage
 
 \subsubsection*{Rollen und Mandantentrennung}
-Die Mandantentrennung wird nicht nur in der Oberfläche abgebildet. Die
-Service-Funktionen filtern Datensätze anhand der Rolle und der zugeordneten
-Firma. Benutzer ohne Root-Rolle sehen dadurch nur Daten aus ihrer
-Firma.
+Die Service-Funktionen filtern sichtbare Datensätze anhand der Rolle und der
+zugeordneten Firma. Zusätzlich wird vor Änderungen geprüft, ob der Ziel-Datensatz
+zum Berechtigungsbereich des angemeldeten Benutzers gehört.
 
 \lstinputlisting[
   language=Python,
-  firstline=8,
-  lastline=69,
-  firstnumber=8,
-  caption={Rollenprüfung und Filterung sichtbarer Daten}
-]{PROJEKT/app/services/permissions.py}
-\clearpage
-
-\subsubsection*{Schutz vor firmenfremden Änderungen}
-Vor jeder Änderung wird geprüft, ob der angemeldete Benutzer den betroffenen
-Datensatz bearbeiten darf. Root darf firmenübergreifend arbeiten,
-andere Benutzer bleiben auf ihre Firma begrenzt. Root-Benutzer werden
-zusätzlich vor versehentlicher Bearbeitung durch andere Rollen geschützt.
-
-\lstinputlisting[
-  language=Python,
-  firstline=78,
+  firstline=18,
   lastline=111,
-  firstnumber=78,
-  caption={Prüfung bearbeitbarer Firmen und Benutzer}
+  firstnumber=18,
+  caption={Rollenprüfung, Datenfilterung und Änderungsschutz},
+  label={lst:permissions}
 ]{PROJEKT/app/services/permissions.py}
 \clearpage
 
-\subsubsection*{Auditierung und Schutz sensibler Daten}
-Fachliche Änderungen werden im Audit-Log gespeichert. Dabei werden sensible
-Felder wie Passwörter vor dem Speichern maskiert. Dadurch bleibt die Änderung
-nachvollziehbar, ohne Passwortwerte im Audit-Log offenzulegen.
+\subsubsection*{Auditierung sensibler Daten}
+Der Auszug zeigt die Maskierung sensibler Felder und das Erzeugen eines
+Audit-Eintrags. Dadurch werden Änderungen nachvollziehbar, ohne Passwortwerte
+im Audit-Log offenzulegen.
 
 \lstinputlisting[
   language=Python,
-  firstline=9,
+  firstline=33,
   lastline=49,
-  firstnumber=9,
-  caption={Maskierung sensibler Felder im Audit-Log}
+  firstnumber=33,
+  caption={Maskierung sensibler Felder im Audit-Log},
+  label={lst:audit-redaction}
 ]{PROJEKT/app/services/audit.py}
 
 \lstinputlisting[
@@ -97,48 +69,21 @@ nachvollziehbar, ohne Passwortwerte im Audit-Log offenzulegen.
   firstline=121,
   lastline=145,
   firstnumber=121,
-  caption={Erzeugen eines Audit-Eintrags}
+  caption={Erzeugen eines Audit-Eintrags},
+  label={lst:audit-create}
 ]{PROJEKT/app/services/audit.py}
 \clearpage
 
-\subsubsection*{Audit-Einträge für Änderungen}
-Für Erstellen, Ändern und Löschen werden jeweils passende Audit-Informationen
-abgelegt. Bei Änderungen wird sowohl der vorherige als auch der neue Zustand
-gespeichert. Dadurch kann später nachvollzogen werden, was konkret geändert
-wurde.
-
-\lstinputlisting[
-  language=Python,
-  firstline=148,
-  lastline=213,
-  firstnumber=148,
-  caption={Audit-Einträge für Erstellen, Ändern und Löschen}
-]{PROJEKT/app/services/audit.py}
-\clearpage
-
-\subsubsection*{Kontrolliertes Zurücksetzen}
-Für ausgewählte Audit-Einträge kann der vorherige Zustand wiederhergestellt
-werden. Auch dieser Vorgang erzeugt wieder einen neuen Audit-Eintrag, damit
-das Zurücksetzen selbst nachvollziehbar bleibt.
+\subsubsection*{Rollback auf Basis des Audit-Logs}
+Für ausgewählte Audit-Einträge kann der vorherige Zustand kontrolliert
+wiederhergestellt werden. Auch der Rollback selbst erzeugt wieder einen
+Audit-Eintrag.
 
 \lstinputlisting[
   language=Python,
   firstline=286,
-  lastline=365,
+  lastline=343,
   firstnumber=286,
-  caption={Rollback auf Basis eines Audit-Eintrags}
+  caption={Rollback eines Audit-Eintrags},
+  label={lst:audit-rollback}
 ]{PROJEKT/app/services/audit.py}
-\clearpage
-
-\subsubsection*{API-Beispiel}
-Die API nutzt dieselben Berechtigungsprüfungen wie die Weboberfläche. Im
-Beispiel dürfen nur Manager eine Mail-Adresse anlegen. Beim Lesen werden die
-sichtbaren Mail-Adressen über den aktuell angemeldeten Benutzer gefiltert.
-
-\lstinputlisting[
-  language=Python,
-  firstline=21,
-  lastline=54,
-  firstnumber=21,
-  caption={API-Auszug für Mail-Adressen mit Rollenprüfung}
-]{PROJEKT/app/web/api/mail_addresses.py}

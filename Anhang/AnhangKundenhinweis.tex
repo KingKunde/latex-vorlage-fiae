@@ -1,7 +1,33 @@
 % !TEX root = ../Projektdokumentation.tex
-\subsection{Kundenhinweis}
+\subsection{Kurzanleitung für Anwender}
 \label{app:Kundenhinweis}
 Die Anwendung ist für die tägliche Pflege von Firmen, Benutzern,
-Mail-Adressen und IP-Adressen vorgesehen. Vor dem Löschen eines Datensatzes
-soll geprüft werden, ob der Eintrag noch für nachgelagerte Prozesse benötigt
-wird. Fachliche Änderungen sind über das Audit-Log nachvollziehbar.
+Mail-Adressen und IP-Adressen vorgesehen. Nach der Anmeldung stehen abhängig
+von der eigenen Rolle die jeweils freigegebenen Menüpunkte zur Verfügung.
+Root-Benutzer können firmenübergreifend arbeiten. Admin-Benutzer verwalten
+Benutzer und fachliche Einträge innerhalb der eigenen Firma. Benutzer mit der
+Rolle User können die für sie freigegebenen Daten einsehen, aber keine
+Benutzerverwaltung durchführen.
+
+\begin{itemize}
+\item \textbf{Anmeldung:} Die Anmeldung erfolgt mit E-Mail-Adresse und
+      Passwort. Mehrere fehlerhafte Anmeldeversuche können zeitweise zu einer
+      Sperre führen.
+\item \textbf{Pflege von Datensätzen:} Neue Firmen, Benutzer, Mail-Adressen
+      und IP-Adressen werden über die jeweiligen Formularmasken angelegt.
+      Pflichtfelder und fachliche Eingaben werden durch die Anwendung geprüft.
+\item \textbf{Löschen und Deaktivieren:} Vor dem Löschen eines Datensatzes
+      soll geprüft werden, ob der Eintrag noch für nachgelagerte Prozesse
+      benötigt wird. Falls ein Eintrag nur vorübergehend nicht genutzt werden
+      soll, ist eine Deaktivierung vorzuziehen.
+\item \textbf{Nachvollziehbarkeit:} Fachliche Änderungen werden im Audit-Log
+      protokolliert. Dort ist nachvollziehbar, welcher Benutzer welche
+      Änderung zu welchem Zeitpunkt durchgeführt hat.
+\item \textbf{Korrekturen:} Für definierte Fälle können Änderungen über
+      die Rollback-Funktion zurückgesetzt werden. Vor einem Rollback ist zu
+      prüfen, ob seitdem weitere fachliche Änderungen vorgenommen wurden.
+\end{itemize}
+
+Bei fachlichen Unsicherheiten, beispielsweise vor dem Entfernen produktiv
+genutzter Mail- oder IP-Einträge, soll die Änderung zunächst mit dem
+zuständigen Ansprechpartner abgestimmt werden.
