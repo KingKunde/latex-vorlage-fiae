@@ -25,6 +25,7 @@ class AuthenticationResult:
 def authenticate_user(
     *, session: Session, request: Request, email: str, password: str
 ) -> AuthenticationResult:
+    
     identifier = email.strip().lower()
     ip_address = request.client.host if request.client else None
 
@@ -57,6 +58,7 @@ def authenticate_user(
 
     statement = select(User).where(User.email == identifier)
     user = session.exec(statement).first()
+    
     if user is None or not verify_password(password, user.password_hash):
         register_failed_login_attempt(ip_address)
         record_login_failure(identifier, session)

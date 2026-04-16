@@ -2,15 +2,17 @@
 \section{Kundendokumentation}
 \label{sec:Kundendokumentation}
 Die Anwendung wird über einen Webbrowser aufgerufen. Nach erfolgreicher
-Anmeldung stehen die Menüpunkte Dashboard, Organisationen, Benutzer,
-Mail-Adressen, IP-Adressen und Audit-Log zur Verfügung. Welche Bereiche
-sichtbar und bearbeitbar sind, richtet sich nach der zugewiesenen Rolle.
+Anmeldung stehen die Menüpunkte Dashboard, Firmen, Benutzer,
+Mail-Adressen, IP-Adressen und Audit-Log zur Verfügung. Welche Bereiche ein
+Benutzer sehen oder bearbeiten darf, richtet sich nach seiner Rolle und der
+zugeordneten Firma.
 
-Neue Organisationen, Benutzer sowie Mail- und IP-Einträge werden über die
-jeweiligen Listenansichten angelegt. Änderungen erfolgen über Bearbeitungs-
-formulare, die Eingaben bereits beim Speichern validieren. Fehlerhafte
+Neue Firmen, Benutzer sowie Mail- und IP-Einträge werden über die
+jeweiligen Listenansichten angelegt. Änderungen erfolgen über
+Bearbeitungsformulare, die Eingaben bereits beim Speichern prüfen. Fehlerhafte
 Eingaben werden direkt am betroffenen Feld angezeigt. Dadurch kann die Pflege
-ohne technische Detailkenntnisse nachvollziehbar und sicher erfolgen.
+ohne Shell-Zugriff und ohne tiefergehende Linux-Kenntnisse nachvollziehbar
+erfolgen.
 
 Das Audit-Log dient der Rückverfolgung fachlicher Änderungen. Es zeigt, wann
 ein Datensatz erstellt, geändert oder gelöscht wurde. Soweit fachlich
@@ -20,13 +22,9 @@ sich zusätzlich im \Anhang{app:Kundenhinweis}.
 
 Für die Einführung beim Kunden ist keine umfangreiche Schulung erforderlich.
 Die Anwendung orientiert sich an den bekannten Objekten des Fachprozesses und
-verwendet eine durchgängige Bedienlogik für Listen-, Detail- und
-Bearbeitungsansichten. Dadurch kann die Kundendokumentation auf die für den
-Betrieb notwendigen Schritte konzentriert bleiben.
+verwendet eine einheitliche Bedienung für Listen-, Detail- und
+Bearbeitungsansichten. Dadurch kann sich die Kundendokumentation auf die
+Schritte konzentrieren, die im Betrieb wirklich benötigt werden.
 
 Im laufenden Betrieb ist darauf zu achten, dass Berechtigungen nur nach dem
-tatsächlichen Aufgabenbereich vergeben werden. Insbesondere administrative
-Rollen dürfen nicht pauschal verteilt werden, da sie organisationsübergreifende
-Pflegevorgänge ermöglichen. Neue Einträge für Mail-Adressen und IP-Adressen
-sollen vor dem Speichern fachlich geprüft werden, damit nur berechtigte
-Ausnahmen in den verwalteten Datenbestand aufgenommen werden.
+tatsächlichen Aufgabenbereich vergeben werden.

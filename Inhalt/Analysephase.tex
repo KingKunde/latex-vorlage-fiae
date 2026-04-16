@@ -1,34 +1,35 @@
 % !TEX root = ../Projektdokumentation.tex
 \section{Technisch-wirtschaftlicher Variantenvergleich}
 \label{sec:Variantenvergleich}
-Für die Zielerreichung wurden drei Lösungsvarianten betrachtet. Variante~1
-war die Beibehaltung der manuellen Pflege. Variante~2 war die Einführung einer
-allgemeinen Standardlösung für Stammdaten- und Freigabeverwaltung. Variante~3
-war die Entwicklung einer betriebsspezifischen Webanwendung. Die Entscheidung
-wurde sowohl technisch als auch wirtschaftlich bewertet.
+Für das Projekt wurden drei Lösungsvarianten betrachtet. Die erste
+Variante war die Beibehaltung der manuellen Pflege auf Shell-Ebene. Die zweite
+Variante war die Einführung einer allgemeinen Standardlösung für Stammdaten-
+und Freigabeverwaltung. Die dritte Variante war die Entwicklung einer
+betriebsspezifischen Webanwendung. Die Entscheidung wurde sowohl fachlich als
+auch wirtschaftlich bewertet.
 
 \subsection{Technische Bewertung der Varianten}
 \label{sec:TechnischeBewertung}
-Die manuelle Pflege verursacht keine Einführungskosten, löst jedoch keine der
-identifizierten Kernprobleme. Weder die Mandantentrennung noch eine
-nachvollziehbare Änderungshistorie werden dadurch systematisch abgebildet.
-Auch Validierungen und ein konsistentes Rollenmodell fehlen weiterhin.
+Die manuelle Pflege verursacht zunächst keine Einführungskosten, löst aber
+keines der beschriebenen Probleme. Der Prozess bleibt weiterhin von einzelnen
+Administratoren abhängig. Außerdem fehlen eine saubere Trennung der
+Firmen, eine nachvollziehbare Änderungshistorie und eine einheitliche
+Prüfung der Eingaben.
 
-Eine Standardlösung reduziert den manuellen Aufwand grundsätzlich, wäre für
-den konkreten Einsatzzweck jedoch nur eingeschränkt passend. Der benötigte
-Funktionsumfang ist zwar überschaubar, kombiniert aber mehrere spezifische
-Anforderungen: organisationsbezogene Rechte, Verwaltung von Mail- und
-IP-Freigaben, Session-Login, Audit-Log und Datenbereitstellung für die
-nachgelagerte Mail-Infrastruktur. Bei einer Fremdlösung wären deshalb
-Anpassungen, Schnittstellenabstimmungen und ein fachlicher Kompromiss beim
-Rollenmodell zu erwarten gewesen.
+Eine Standardlösung kann manuellen Aufwand grundsätzlich reduzieren, passt aber
+nicht automatisch zum vorhandenen Ablauf. Im Projekt geht es nicht um eine
+beliebige Stammdatenpflege, sondern um Firmen, Mail- und IP-Freigaben,
+Rollen, Anmeldung und Nachvollziehbarkeit. Bei einer Fremdlösung wären deshalb
+Anpassungen und Abstimmungen zu erwarten gewesen. Außerdem hätte das
+Rollenmodell wahrscheinlich an die Standardlösung angepasst werden müssen und
+nicht umgekehrt.
 
-Die Eigenentwicklung deckt den benötigten Funktionsumfang zielgerichtet ab und
-lässt sich an den vorhandenen Betriebsprozess anpassen. Gleichzeitig bleibt
-die Anwendung technisch überschaubar, weil sie nur die fachlich benötigten
-Funktionen enthält. Der zusätzliche Entwicklungsaufwand ist für den
-Projektumfang vertretbar und führt zu einer wartbaren Lösung ohne unnötige
-Abhängigkeit von Fremdprodukten.
+Die Eigenentwicklung deckt genau die benötigten Funktionen ab und kann am
+vorhandenen Ablauf ausgerichtet werden. Die Anwendung bleibt
+überschaubar, weil nur die Funktionen umgesetzt werden, die für die Pflege der
+Cloud-basierten Kunden wirklich benötigt werden. Der zusätzliche
+Entwicklungsaufwand passt in den geplanten Zeitrahmen und vermeidet eine
+unnötige Abhängigkeit von einem Fremdprodukt.
 
 \begin{table}[htbp]
 \centering
@@ -53,13 +54,13 @@ Betriebliche Einführbarkeit & hoch & mittel & hoch \\
 
 \subsection{Wirtschaftliche Bewertung}
 \label{sec:WirtschaftlicheBewertung}
-Die wirtschaftliche Betrachtung basiert auf typischen Pflegevorgängen im
-Administrationsalltag. Für die Kalkulation wurden 60 Änderungsvorgänge pro
-Monat angesetzt. Vor der Projektdurchführung betrug der mittlere Aufwand pro
-Vorgang rund 10 Minuten, da Informationen zusammengesucht, Zuständigkeiten
-abgestimmt und Eingaben teilweise manuell nachgehalten werden mussten. Mit der
-neuen Anwendung sinkt der Bearbeitungsaufwand auf rund 4 Minuten, weil
-Suchaufwand, Mehrfacheingaben und Rückfragen reduziert werden.
+Die wirtschaftliche Betrachtung orientiert sich an typischen Pflegevorgängen
+im Administrationsalltag. Für die Kalkulation wurden 60 Änderungsvorgänge pro
+Monat angesetzt. Vor der Projektdurchführung dauerte ein Vorgang im Mittel
+rund 10 Minuten, weil Informationen zusammengesucht, Zuständigkeiten geklärt
+und Eingaben manuell nachgehalten werden mussten. Mit der neuen Anwendung sinkt
+der Aufwand auf rund 4 Minuten, weil die Daten an einer Stelle gepflegt werden
+und weniger Rückfragen entstehen.
 
 \begin{table}[htbp]
 \centering
@@ -92,32 +93,28 @@ dargestellt.
 Bei einer monatlichen Einsparung von 6 Stunden und einem kalkulatorischen
 internen Satz von \eur{65} ergibt sich ein wirtschaftlicher Nutzen von
 \eur{390} pro Monat. Die Projektkosten amortisieren sich damit nach rund
-14{,}6 Monaten. Die Amortisationsdauer liegt für eine intern genutzte
-Verwaltungsanwendung im vertretbaren Bereich, weil neben der Zeitersparnis auch
-qualitative Effekte wie Nachvollziehbarkeit, Fehlervermeidung und
-Mandantentrennung erreicht werden.
+14{,}6 Monaten. Die Amortisationsdauer ist für eine intern genutzte
+Verwaltungsanwendung vertretbar. Zusätzlich zur Zeitersparnis werden
+Fehlerquellen reduziert, Änderungen besser nachvollziehbar und die
+Firmen klarer getrennt.
 
 \subsection{Nutzwertanalyse und Entscheidung}
 \label{sec:Nutzwertanalyse}
-Da sich die Entscheidung nicht allein über die Bearbeitungszeit ableiten
-lässt, wurde zusätzlich eine Nutzwertanalyse durchgeführt. Bewertet wurden
-die Kriterien Nachvollziehbarkeit, Sicherheit, Passgenauigkeit des
-Funktionsumfangs, Bedienbarkeit und Wartbarkeit. Die gewichtete Auswertung ist
-im \Anhang{app:Variantenvergleich} enthalten.
+Da die Bearbeitungszeit allein nicht für die Entscheidung ausreicht, wurde
+zusätzlich eine Nutzwertanalyse durchgeführt. Bewertet wurden die Kriterien
+Nachvollziehbarkeit, Sicherheit, fachliche Eignung, Bedienbarkeit und
+Wartbarkeit. Die gewichtete Auswertung ist im
+\Anhang{app:Variantenvergleich} enthalten.
 
 Die manuelle Pflege erzielt den niedrigsten Nutzwert, weil sie den bestehenden
-Problembestand unverändert fortschreibt. Die Standardlösung verbessert die
-Bedienung, erreicht jedoch nicht ohne Zusatzaufwand die geforderte
-Passgenauigkeit. Die Eigenentwicklung erzielt den höchsten Nutzwert, weil sie
-den Fachprozess zielgerichtet abbildet, technisch beherrschbar bleibt und ohne
-funktionsfremde Bestandteile eingeführt werden kann. Aus diesen Gründen wurde
-die Eigenentwicklung als wirtschaftlich und technisch sinnvollste Variante
-ausgewählt.
+Zustand im Wesentlichen beibehält. Die Standardlösung verbessert zwar die
+Bedienung, müsste aber erst an den konkreten Prozess angepasst werden. Die
+Eigenentwicklung erzielt den höchsten Nutzwert, weil sie zum vorhandenen
+Ablauf passt und ohne unnötige Zusatzfunktionen eingeführt werden kann.
+Aus diesen Gründen wurde die Eigenentwicklung als wirtschaftlich und fachlich
+sinnvollste Variante ausgewählt.
 
-Für die Entscheidung war ausschlaggebend, dass die wirtschaftliche Bewertung
-nicht isoliert betrachtet wurde. Gerade im vorliegenden Umfeld wirken sich
-fehlerhafte Freigaben oder unklare Zuständigkeiten nicht nur auf die
-Bearbeitungszeit, sondern auch auf die Betriebssicherheit aus. Die
-Eigenentwicklung bietet deshalb den größten Gesamtnutzen, obwohl sie in der
-Einführungsphase höhere Initialkosten verursacht als die Fortführung des
-Bestandszustands.
+Für die Entscheidung war wichtig, dass nicht nur die reine Bearbeitungszeit
+betrachtet wurde. Fehlerhafte Freigaben oder unklare Zuständigkeiten können im
+Mail-Umfeld direkte Auswirkungen auf den Betrieb haben. Deshalb wurde der
+höhere Anfangsaufwand der Eigenentwicklung akzeptiert.

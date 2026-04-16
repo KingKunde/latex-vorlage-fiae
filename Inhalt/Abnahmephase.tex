@@ -1,25 +1,25 @@
 % !TEX root = ../Projektdokumentation.tex
 \section{Qualitätssicherung}
 \label{sec:Qualitaetssicherung}
-Die Qualitätssicherung erfolgte durch die Kombination aus automatisierten und
-manuellen Tests. Auf Code-Ebene wurden insbesondere Validierungen,
-Benutzerverwaltung, Audit-Funktionen und Formularlogik über vorhandene
-Pytest-Tests abgesichert. Auf Anwendungsebene wurden die zentralen
-Arbeitsabläufe über die Weboberfläche geprüft, darunter Anmeldung,
-Rollenvergabe, Mandantentrennung sowie die Pflege von Mail- und IP-Adressen.
+Die Qualitätssicherung erfolgte durch automatisierte und manuelle Tests. Mit
+Pytest wurden vor allem Validierungen, Benutzerverwaltung, Audit-Funktionen und
+Formularlogik geprüft. Zusätzlich wurden die wichtigsten Arbeitsabläufe direkt
+über die Weboberfläche getestet, darunter Anmeldung, Rollenvergabe,
+Mandantentrennung sowie die Pflege von Mail- und IP-Adressen.
 
-Die Teststrategie war für das Projekt ausreichend, weil sie sowohl die
-fachliche Logik als auch die Benutzerinteraktion abdeckt. Automatisierte Tests
-reduzieren das Risiko von Regressionen bei künftigen Anpassungen. Die
-manuellen Durchläufe waren zusätzlich erforderlich, um Sichtbarkeiten,
-Navigation und Fehlermeldungen im Zusammenspiel der einzelnen Komponenten zu
-prüfen. Ein Testauszug befindet sich im \Anhang{app:Testauszug}.
+Diese Mischung war für das Projekt passend, weil sie sowohl die fachlichen
+Regeln als auch die Bedienung abdeckt. Die automatisierten Tests helfen dabei,
+Fehler bei späteren Änderungen schneller zu erkennen. Die manuellen Tests
+waren zusätzlich notwendig, um Sichtbarkeiten, Navigation und Fehlermeldungen
+im Zusammenspiel der einzelnen Bereiche zu prüfen. Auszüge aus den
+sicherheitsrelevanten Kernfunktionen befinden sich im
+\Anhang{app:CodeAuthentifizierung}.
 
 \subsection{Soll-Ist-Vergleich von Leistung, Zeit und Inhalt}
 \label{sec:SollIstVergleich}
-Die geplanten Kernleistungen wurden erreicht. Die Anwendung ist
+Die geplanten Funktionen wurden erreicht. Die Anwendung ist
 mehrmandantenfähig, stellt ein rollenbasiertes Berechtigungskonzept bereit und
-ermöglicht die zentrale Pflege von Organisationen, Benutzern, Mail-Adressen
+ermöglicht die zentrale Pflege von Firmen, Benutzern, Mail-Adressen
 und IP-Adressen. Zusätzlich wurden Audit-Log, Login-Schutz und Rollback für
 ausgewählte Änderungen umgesetzt.
 
@@ -44,18 +44,16 @@ Projektzeit & 80 h & eingehalten \\
 \label{tab:SollIst}
 \end{table}
 
-Inhaltlich ergaben sich keine grundlegenden Abweichungen vom Projektziel. Der
-Schwerpunkt verlagerte sich im Projektverlauf leicht zugunsten von
-Sicherheits- und Nachvollziehbarkeitsanforderungen. Diese Vertiefung war
-fachlich sinnvoll, da gerade bei einer zentralen Verwaltungsanwendung die
-korrekte Rechteprüfung und die Historisierung der Änderungen für den
-späteren Betrieb entscheidend sind.
+Inhaltlich gab es keine grundlegenden Abweichungen vom Projektziel. Im
+Projektverlauf wurde etwas mehr Wert auf Sicherheit und Nachvollziehbarkeit
+gelegt. Das war sinnvoll, weil bei einer zentralen Verwaltungsanwendung klar
+sein muss, wer welche Daten bearbeiten darf und welche Änderungen später
+nachvollzogen werden können.
 
 \subsection{Bewertung der Testergebnisse}
 \label{sec:BewertungTestergebnisse}
 Die durchgeführten Tests bestätigten, dass die wesentlichen Pflegeabläufe
-stabil funktionieren. Insbesondere die Kombination aus Login, Rollenprüfung,
-Mandantentrennung und Auditierung konnte ohne fachliche Fehlfunktion
-nachgewiesen werden. Restpunkte betreffen keine fehlenden Kernfunktionen,
-sondern mögliche spätere Erweiterungen wie weitergehende Integrations- oder
-Lasttests für einen produktionsnahen Ausbau.
+stabil funktionieren. Besonders wichtig war dabei die Kombination aus Login,
+Rollenprüfung, Mandantentrennung und Auditierung. Offene Punkte betreffen keine
+fehlenden Hauptfunktionen, sondern mögliche spätere Erweiterungen wie
+weitergehende Integrations- oder Lasttests für einen produktionsnahen Ausbau.

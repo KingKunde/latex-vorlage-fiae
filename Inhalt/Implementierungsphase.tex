@@ -1,48 +1,47 @@
 % !TEX root = ../Projektdokumentation.tex
-\subsection{Implementierung fachlicher Kernfunktionen}
+\subsection{Implementierung der wichtigsten Funktionen}
 \label{sec:ImplementierungKernfunktionen}
-Die Umsetzung erfolgte modulweise entlang der fachlichen Teilbereiche. Zunächst
-wurden die SQLModel-Klassen für Organisationen, Benutzer, Mail-Adressen,
-IP-Adressen und Audit-Daten angelegt. Anschließend wurden die zugehörigen
-Service-Module für Validierung, Benutzerverwaltung, Rollenprüfung und
-fachliche Pflegeprozesse implementiert. Dieses Vorgehen stellte sicher, dass
-die Webschicht auf klar abgegrenzte Fachfunktionen zugreifen kann.
+Die Umsetzung erfolgte schrittweise entlang der fachlichen Teilbereiche.
+Zunächst wurden die Datenklassen für Firmen, Benutzer, Mail-Adressen,
+IP-Adressen und Audit-Daten angelegt. Danach folgten die Funktionen für
+Validierung, Benutzerverwaltung, Rollenprüfung und die Pflegeprozesse. So
+konnte jeder Teilbereich einzeln umgesetzt und getestet werden, bevor er in der
+Weboberfläche genutzt wurde.
 
-Ein technischer Schwerpunkt lag auf der Authentifizierung. Die Anwendung
-nutzt Session-Login, Passwort-Hashing mit Argon2, Login-Audit sowie
-Schutzmechanismen gegen wiederholte Fehlanmeldungen. Damit wurde der
-Anforderung Rechnung getragen, dass sicherheitsnahe Verwaltungsfunktionen nicht
-über ungesicherte Standardzugriffe bereitgestellt werden dürfen.
+Ein Schwerpunkt lag auf der Anmeldung und Absicherung der Benutzerkonten. Die
+Anwendung nutzt Session-Login, Passwort-Hashing mit Argon2, Login-Audit sowie
+Schutzmechanismen gegen wiederholte Fehlanmeldungen. Damit wird verhindert,
+dass sensible Verwaltungsfunktionen ohne ausreichenden Schutz erreichbar sind.
 
 \subsection{Implementierung der Benutzer- und Mandantenverwaltung}
 \label{sec:ImplementierungMandantenverwaltung}
-Die Benutzer- und Mandantenverwaltung bildet den Kern des Fachprozesses.
-Organisationen können angelegt, geändert und logisch getrennt verwaltet
-werden. Benutzer erhalten Rollen und werden bestimmten Organisationen
-zugeordnet. Auf dieser Grundlage steuert die Anwendung, welche Datensätze
-eingesehen oder gepflegt werden dürfen.
+Die Benutzer- und Mandantenverwaltung ist ein zentraler Teil der Anwendung.
+Firmen können angelegt, geändert und getrennt verwaltet werden.
+Benutzer erhalten Rollen und werden bestimmten Firmen zugeordnet. Auf
+dieser Grundlage steuert die Anwendung, welche Datensätze jemand sehen oder
+bearbeiten darf.
 
-Für Mail- und IP-Einträge wurden eigene Verwaltungsfunktionen umgesetzt, die
-Eingaben validieren und Änderungen protokollieren. Das vermeidet fachlich
-ungültige Daten und schafft eine einheitliche Grundlage für die
-nachgelagerte Weiterverarbeitung im Mail-Umfeld.
+Für Mail- und IP-Einträge wurden eigene Verwaltungsfunktionen umgesetzt. Sie
+prüfen Eingaben und protokollieren Änderungen. Dadurch werden ungültige Daten
+früh erkannt und die nachgelagerten Mail-Systeme können auf eine einheitliche
+Datenbasis zugreifen.
 
 \subsection{Erzielte Projektergebnisse}
 \label{sec:ErzielteProjektergebnisse}
-Mit Abschluss der Implementierung lag eine lauffähige Webanwendung vor, die
-den vorgesehenen Funktionsumfang abdeckt. Organisationen, Benutzer,
+Mit Abschluss der Implementierung lag eine lauffähige Webanwendung vor.
+Firmen, Benutzer,
 Mail-Adressen und IP-Adressen können zentral verwaltet werden. Fachliche
 Änderungen werden im Audit-Log dokumentiert und können für definierte Fälle
 über einen Rollback wiederhergestellt werden.
 
-Zusammenfassend wurde damit nicht nur eine neue Eingabemaske geschaffen,
-sondern ein strukturierter Verwaltungsprozess mit Rechtekonzept, Validierung
-und Historisierung eingeführt. Ein Quelltextauszug zur Berechtigungslogik
-befindet sich im \Anhang{app:CodeAuthentifizierung}.
+Zusammenfassend wurde damit nicht nur eine neue Eingabemaske geschaffen. Der
+bisher manuelle Pflegeprozess wurde in eine strukturierte Anwendung mit
+Rechtekonzept, Prüfung der Eingaben und Änderungshistorie überführt. Die
+wichtigsten Quelltextauszüge zu Datenschutz und Sicherheit befinden sich im
+\Anhang{app:CodeAuthentifizierung}.
 
-Während der Implementierung zeigte sich, dass insbesondere die Trennung
-zwischen organisationsbezogenen und globalen Rechten sauber im Service-Layer
-abgebildet werden muss. Eine reine Prüfung auf Oberflächenebene wäre nicht
-ausreichend gewesen, da schutzbedürftige Aktionen auch auf Routenniveau
-abgesichert werden müssen. Die Umsetzung im Service-Layer war daher ein
-wesentlicher Beitrag zur technischen Qualität des Ergebnisses.
+Während der Implementierung zeigte sich, dass die Trennung zwischen
+firmenbezogenen und globalen Rechten nicht nur in der Oberfläche
+berücksichtigt werden darf. Die Prüfung muss auch in den fachlichen Funktionen
+stattfinden, damit geschützte Aktionen nicht über andere Wege ausgeführt werden
+können. Deshalb wurde die Rechteprüfung in den Service-Funktionen umgesetzt.

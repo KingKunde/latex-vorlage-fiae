@@ -3,79 +3,77 @@
 \label{sec:DurchfuehrungUndErgebnisse}
 \subsection{Architektur und Zielplattform}
 \label{sec:ArchitekturUndZielplattform}
-Die Anwendung wurde als serverseitige Webanwendung auf Basis von Python~3.12,
-FastAPI und SQLModel umgesetzt. Der Zugriff erfolgt über einen Browser. Eine
-separate Client-Installation ist daher nicht erforderlich. Dieses Modell war
-für den internen Einsatz zweckmäßig, weil die Anwendung ohne aufwendige
-Verteilung auf Arbeitsplatzrechner bereitgestellt werden kann.
+Die Anwendung wurde als Webanwendung auf Basis von Python~3.12, FastAPI und
+SQLModel geplant. Der Zugriff erfolgt über einen Browser, sodass auf den
+Arbeitsplätzen keine eigene Client-Installation notwendig ist. Das passt zum
+internen Einsatz, weil Administratoren die Anwendung zentral aufrufen können
+und nicht mehr direkt auf der Shell arbeiten müssen.
 
-Die technische Struktur ist in vier Bereiche gegliedert: Datenmodell,
-Fachlogik, Web-API und Templates. Im Quellcode entsprechen diese Bereiche den
-Ordnern \Code{app/models}, \Code{app/services}, \Code{app/web/api} und
-\Code{app/web/templates}. Dadurch bleiben Datenmodell,
-Request-Verarbeitung und Darstellung sauber getrennt. Diese Trennung
-vereinfacht die Wartung und erleichtert automatisierte Tests, weil
-Fachregeln nicht in einzelnen Templates oder Routenfunktionen verteilt sind.
+Die Anwendung ist in vier Bereiche gegliedert: Datenmodell, Fachlogik, Web-API
+und Templates. Im Quellcode entsprechen diese Bereiche den Ordnern
+\Code{app/models}, \Code{app/services}, \Code{app/web/api} und
+\Code{app/web/templates}. Dadurch ist klar, wo Daten gespeichert, Regeln
+geprüft und Inhalte angezeigt werden. Diese Trennung erleichtert die Wartung
+und die Tests, weil die Regeln nicht in einzelnen Masken verteilt sind.
 Ein Komponentendiagramm ist im
 \Anhang{app:Komponentendiagramm} dargestellt.
 
 \subsection{Entwurf von Datenmodell und Rechtestruktur}
 \label{sec:DatenmodellUndRechte}
-Das Datenmodell umfasst die fachlichen Entitäten Organisation, Benutzer,
-Mail-Adresse und IP-Adresse. Ergänzt werden diese durch Audit- und
-Login-Tabellen. Damit lassen sich sowohl fachliche Änderungen als auch
-sicherheitsrelevante Login-Vorgänge nachvollziehen.
+Das Datenmodell umfasst Firmen, Benutzer,
+Mail-Adresse und IP-Adresse. Ergänzt werden diese durch Tabellen für Audit- und
+Login-Daten. Damit lässt sich später nachvollziehen, welche fachlichen
+Änderungen durchgeführt wurden und welche Anmeldevorgänge sicherheitsrelevant
+waren.
 
-Im Berechtigungskonzept wurden globale und organisationsbezogene Rechte
+Im Berechtigungskonzept wurden globale und firmenbezogene Rechte
 getrennt. Root- und Admin-Rollen dürfen administrative Aufgaben für mehrere
-Organisationen ausführen, während einfache Benutzer auf die ihnen zugeordneten
-Mandanten begrenzt bleiben. Diese fachliche Trennung war notwendig, damit die
-Anwendung in einem mehrmandantenfähigen Umfeld sicher eingesetzt werden kann.
+Firmen ausführen. Einfache Benutzer bleiben dagegen auf die
+Firmen beschränkt, denen sie zugeordnet sind. Diese Trennung ist
+wichtig, damit Kundendaten nicht versehentlich firmenübergreifend
+sichtbar oder bearbeitbar werden.
 Das Datenbankmodell ist im \Anhang{app:Datenbankmodell} dokumentiert.
 
 \subsection{Entwurf der Benutzeroberfläche}
 \label{sec:EntwurfBenutzeroberflaeche}
-Die Benutzeroberfläche wurde bewusst schlank gehalten. Im Mittelpunkt stand
-eine fehlerarme Datenerfassung und nicht die Darstellung technischer Details.
-Die Navigation führt direkt zu den Kernbereichen Dashboard, Organisationen,
+Die Benutzeroberfläche wurde bewusst einfach gehalten. Im Mittelpunkt stand,
+dass Daten schnell und mit möglichst wenigen Fehlern erfasst werden können.
+Die Navigation führt direkt zu den Kernbereichen Dashboard, Firmen,
 Benutzer, Mail-Adressen, IP-Adressen und Audit-Log. Die einzelnen Masken sind
 formularbasiert aufgebaut und orientieren sich an den täglichen
 Pflegevorgängen des Fachprozesses.
 
-Validierungsfehler werden unmittelbar an den betroffenen Eingabefeldern
-angezeigt. Dadurch werden falsche E-Mail-Adressen, ungültige IP-Adressen oder
-unvollständige Stammdaten nicht erst im Nachgang erkannt. Die klare und in
-allen Bereichen einheitliche Bedienlogik reduziert den Einarbeitungsaufwand und
-senkt die Wahrscheinlichkeit fehlerhafter Eingaben.
+Fehler werden direkt an den betroffenen Eingabefeldern angezeigt. Dadurch
+fallen falsche E-Mail-Adressen, ungültige IP-Adressen oder unvollständige
+Stammdaten sofort auf und müssen nicht später manuell gesucht werden. Die
+einheitliche Bedienung soll den Einstieg erleichtern und fehlerhafte Eingaben
+reduzieren.
 
 \subsection{Sicherheitskonzept und Auditierung}
 \label{sec:Sicherheitskonzept}
-Neben der fachlichen Bedienung wurde die Anwendung mit einem einfachen, aber
-konsequenten Sicherheitskonzept entworfen. Dazu gehören Session-Login,
-Passwort-Hashing, Login-Audit, Rate-Limiting bei Fehlanmeldungen sowie
-kontobezogene Sperrmechanismen. Diese Funktionen sollen verhindern, dass
-berechtigungspflichtige Verwaltungsfunktionen unkontrolliert genutzt werden.
+Neben der fachlichen Bedienung wurde ein Sicherheitskonzept entworfen. Dazu
+gehören Session-Login, Passwort-Hashing, Login-Audit, Begrenzung wiederholter
+Fehlanmeldungen sowie kontobezogene Sperrmechanismen. Diese Funktionen sollen
+verhindern, dass Verwaltungsfunktionen ohne Berechtigung genutzt werden.
 
-Die Auditierung wurde bewusst als eigener Fachbaustein behandelt. Jede
-relevante Änderung an Organisationen, Benutzern, Mail-Adressen und
-IP-Adressen wird mit Kontextinformationen protokolliert. Dadurch können
-fehlerhafte Pflegevorgänge nachvollzogen und fachlich bewertet werden. Für
-ausgewählte Szenarien ist außerdem ein Rollback vorgesehen, um unbeabsichtigte
-Änderungen kontrolliert rückgängig machen zu können.
+Das Audit-Log wurde als eigener Teil der Anwendung vorgesehen. Jede relevante
+Änderung an Firmen, Benutzern, Mail-Adressen und IP-Adressen wird mit
+Zusatzinformationen protokolliert. Dadurch können fehlerhafte Pflegevorgänge
+nachvollzogen und bewertet werden. Für ausgewählte Szenarien ist außerdem ein
+Rollback vorgesehen, damit unbeabsichtigte Änderungen kontrolliert
+zurückgenommen werden können.
 
 \subsection{Schnittstellen und Datenfluss}
 \label{sec:SchnittstellenUndDatenfluss}
-Die Anwendung stellt sowohl HTML-basierte Oberflächen als auch schlanke
-API-Endpunkte bereit. Dadurch können Daten direkt über den
-Browser gepflegt werden, während die fachlich verwalteten Mail- und
-IP-Informationen zugleich in strukturierter Form für nachgelagerte
-Verarbeitungsschritte bereitstehen. Dieses Modell vermeidet doppelte
-Datenhaltung und reduziert Medienbrüche zwischen Pflege und technischer
-Weiterverarbeitung.
+Die Anwendung stellt sowohl HTML-basierte Oberflächen als auch API-Endpunkte
+bereit. Dadurch können Daten direkt über den Browser gepflegt werden. Die
+verwalteten Mail- und IP-Informationen stehen gleichzeitig strukturiert für
+nachgelagerte Verarbeitungsschritte bereit. So müssen die Daten nicht doppelt
+gepflegt werden und können einfacher weiterverarbeitet werden.
 
 Im Datenfluss beginnt jeder Pflegevorgang mit der Authentifizierung des
-Benutzers. Danach prüft die Anwendung Rolle und Organisationszuordnung,
+Benutzers. Danach prüft die Anwendung Rolle und Firmenzuordnung,
 validiert die Eingaben, schreibt die Änderung in die Datenbank und erzeugt bei
-fachlich relevanten Aktionen einen Audit-Eintrag. Dieser Ablauf stellt sicher,
-dass Anzeige, Berechtigung, Speicherung und Nachvollziehbarkeit konsistent
-zusammenwirken.
+fachlich relevanten Aktionen einen Audit-Eintrag. So wird bei jedem Vorgang
+geprüft, ob der Benutzer die Änderung durchführen darf und ob sie später
+nachvollzogen werden kann.

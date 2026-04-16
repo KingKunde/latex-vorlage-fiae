@@ -1,87 +1,99 @@
 % !TEX root = ../Projektdokumentation.tex
 \section{Das Thema und Problemstellung}
 \label{sec:ThemaUndProblemstellung}
-Der Ausbildungsbetrieb betreibt und betreut Mail-Infrastrukturen für mehrere
-Organisationen. In diesem Umfeld müssen freigegebene Mail-Adressen und
-IP-Adressen regelmäßig angepasst werden, damit technische Ausnahmen im
-Antispam-Umfeld nachvollziehbar und wirksam gepflegt bleiben. Vor Beginn des
-Projekts erfolgte diese Pflege ohne zentrale Anwendung. Informationen waren auf
-mehrere Datenquellen verteilt, Änderungen wurden manuell übernommen und
-Rückfragen mussten häufig im direkten Austausch geklärt werden.
+Der Auftraggeber ist die \betriebName{}, ein Systemhaus für IT-Dienstleistungen
+und den Betrieb von Kundeninfrastrukturen. Zu den Kunden gehören Unternehmen,
+deren Mail-Systeme entweder auf einer lokalen Active-Directory-Umgebung oder
+auf einer Cloud-basierten Verzeichnisstruktur beruhen. Für diese Kunden werden
+unter anderem Mail- und IP-Freigaben betreut, damit nachgelagerte
+Antispam-Systeme eingehende Nachrichten korrekt zuordnen und bewerten können.
 
-Die Ausgangssituation war fachlich problematisch, weil dieselben Daten an
-verschiedenen Stellen gepflegt wurden und keine einheitliche Bedienlogik
-vorhanden war. Dadurch entstanden Medienbrüche, uneinheitliche Datenstände
-und ein zusätzlicher Abstimmungsaufwand zwischen den beteiligten
-Mitarbeitern. Gleichzeitig war nur eingeschränkt nachvollziehbar, wer eine
-Freigabe angelegt, geändert oder entfernt hatte. Für einen sicherheitsnahen
-Fachprozess ist dieser Zustand langfristig nicht tragfähig.
+Bei Kunden mit lokaler Active-Directory-Umgebung lief dieser Prozess bereits
+weitgehend automatisiert. Ein Cronjob rief regelmäßig per Skript die benötigten
+Mail-Adressen und IP-Adressen aus dem Kundensystem ab und legte sie in einer
+für die Antispam-Infrastruktur geeigneten Datei ab. Bei Cloud-basierten Kunden
+standen diese Daten dagegen nicht in gleicher Form automatisiert zur Verfügung.
+Die Freigaben wurden deshalb manuell auf Shell-Ebene unter Linux gepflegt.
+Informationen waren auf mehrere Datenquellen verteilt und Rückfragen mussten
+häufig im direkten Austausch geklärt werden.
+
+Das Problem ist, dass nicht jeder Administrator sicher auf Shell-Ebene arbeiten
+kann oder die dafür nötigen Linux-Kenntnisse im gleichen Umfang mitbringt.
+Gleichzeitig war nur eingeschränkt nachvollziehbar, wer eine Freigabe angelegt,
+geändert oder entfernt hatte.
 
 \subsection{Zielstellung der Projektarbeit}
 \label{sec:Zielstellung}
-Ziel der Projektarbeit war die Entwicklung des
-\Fachbegriff{AntispamAdminCenter}, einer webbasierten Verwaltungsanwendung für
-die zentrale Pflege von Organisationen, Benutzern, Mail-Adressen und
-IP-Adressen. Die Anwendung sollte von internen Administratoren und
-autorisierten Organisationsbenutzern genutzt werden können und dabei eine
-eindeutige Trennung zwischen globalen und mandantenbezogenen Rechten
-sicherstellen.
+Ziel des Projekts war die Entwicklung eines
+\Fachbegriff{AntispamAdminCenter} mit einer GUI. Es handelt sich um eine
+webbasierte Verwaltungsanwendung für die zentrale Verwaltung von Firmen,
+Benutzern, Mail-Adressen und IP-Adressen. Die Anwendung sollte von internen
+Administratoren und autorisierten Organisationsbenutzern genutzt werden können.
+Dabei musste klar getrennt bleiben, welche Daten zu welcher Firma
+gehören und wer sie bearbeiten darf. Vertraulichkeit, Authentizität,
+Integrität und Verfügbarkeit waren dabei wichtige Anforderungen.
 
 Aus dem Projektauftrag ergaben sich folgende Kernziele:
 \begin{itemize}
-  \item zentrale und einheitliche Pflege aller fachlich relevanten Stammdaten
+  \item zentrale und einheitliche Verwaltung aller fachlich relevanten Stammdaten
   \item rollenbasiertes Berechtigungskonzept mit Mandantentrennung
   \item abgesicherte Anmeldung mit Session-Verwaltung und Passwort-Hashing
   \item nachvollziehbare Protokollierung fachlicher Änderungen
-  \item Bereitstellung einer belastbaren Datenbasis für nachgelagerte Mail-Systeme
+  \item Bereitstellung verlässlicher Daten für nachgelagerte Mail-Systeme
 \end{itemize}
 
 Das Projektergebnis sollte nicht nur die Bearbeitungszeit senken, sondern vor
-allem die Qualität der Datenhaltung verbessern. Neben der fachlichen Funktion
-stand daher die Beherrschbarkeit des Betriebsprozesses im Vordergrund.
+allem die Qualität der Datenhaltung verbessern. Die Verwaltung sollte einfacher,
+einheitlicher und für andere Administratoren besser nachvollziehbar werden.
 
 \subsection{Ist-Analyse}
 \label{sec:IstAnalyse}
-Die Ist-Analyse zeigte, dass die bisherige Vorgehensweise stark personenabhängig
-war. Änderungen wurden zwar fachlich abgestimmt, technisch jedoch nicht über
-eine dafür vorgesehene Anwendung umgesetzt. Daraus ergaben sich drei zentrale
-Schwachstellen.
+Im Ist-Zustand wurden die Mail- und IP-Freigaben für Cloud-basierte Kunden ohne
+zentrale Fachanwendung verwaltet. Die benötigten Informationen lagen verteilt
+vor, zum Beispiel in bestehenden Kundendaten, technischen Konfigurationsdateien
+und internen Abstimmungen. Änderungen wurden durch Administratoren auf
+Shell-Ebene vorgenommen. Eine einheitliche Oberfläche für das Anlegen,
+Bearbeiten und Prüfen der Freigaben gab es nicht.
 
-Erstens fehlte eine zentrale Datenhaltung für freigegebene Mail- und
-IP-Einträge. Zweitens war die Berechtigungsstruktur nicht systematisch
-abgebildet, so dass zwischen globalen Administratorrechten und
-organisationsbezogenen Zuständigkeiten nur eingeschränkt unterschieden werden
-konnte. Drittens existierte keine belastbare Historie, über die sich
-Änderungen und deren Verursacher im Nachhinein nachvollziehen ließen.
+Auch die Zuordnung zu Firmen und Benutzern war nur indirekt aus den
+vorhandenen Informationen ableitbar. Dadurch musste bei Pflegevorgängen häufig
+manuell geprüft werden, zu welchem Kunden ein Eintrag gehört, wer die Änderung
+angefordert hat und ob die jeweilige Person zur Änderung berechtigt ist. Die
+fachlichen Daten selbst waren überschaubar, der Prozess hing jedoch stark von
+Erfahrung, Linux-Kenntnissen und dem Wissen einzelner Administratoren ab.
 
-Aus betrieblicher Sicht führte dies zu wiederkehrenden Rückfragen, manuellen
-Kontrollen und vermeidbaren Fehlerquellen. Die eigentliche Pflegeaufgabe war
-zwar fachlich überschaubar, der organisatorische Aufwand rund um Kontrolle,
-Abstimmung und Nacharbeit fiel jedoch unverhältnismäßig hoch aus.
+Aus der Analyse ergaben sich mehrere Schwachstellen. Es fehlte ein zentraler
+Ort für freigegebene Mail- und IP-Einträge, eine klare Mandantentrennung, eine
+einheitliche Eingabeprüfung und eine zuverlässige Änderungshistorie, damit autorisierte Benutzer der jeweiligen Firmen ihre
+Mail- und IP-Adressen eigenständig pflegen können. Dadurch
+entstanden wiederkehrende Rückfragen, manuelle Kontrollaufwände und vermeidbare
+Fehlerquellen. Außerdem war nur eingeschränkt nachvollziehbar, wer eine
+Freigabe angelegt, geändert oder entfernt hatte.
 
 \subsection{Soll-Konzept}
 \label{sec:SollKonzept}
 Im Soll-Zustand soll eine zentrale Webanwendung den gesamten Pflegeprozess
-unterstützen. Organisationen, Benutzer, Mail-Adressen und IP-Adressen werden
-in einer gemeinsamen Datenbasis verwaltet und über einheitliche Formulare
-gepflegt. Rollen und Organisationszuordnung steuern, welche Daten angezeigt und
-geändert werden dürfen. Fachliche Änderungen werden revisionsfähig im
-Audit-Log festgehalten.
+unterstützen. Firmen, Benutzer, Mail-Adressen und IP-Adressen sollen
+an einer Stelle verwaltet und über einheitliche Formulare gepflegt werden.
+Rollen und Organisationszuordnung steuern, welche Daten angezeigt und geändert
+werden dürfen. Fachliche Änderungen werden im Audit-Log festgehalten, damit sie
+später nachvollzogen werden können.
 
-Technisch wurde eine schlanke Webanwendung auf Basis von FastAPI, SQLModel und
-SQLite vorgesehen. Diese Kombination war für den Projektumfang geeignet, weil
-sie eine schnelle Umsetzung, klare Trennung zwischen Datenmodell, Fachlogik und
-Webschicht sowie einfache Testbarkeit ermöglicht. Nicht Bestandteil des
-Projekts sind die eigentliche Spam-Filterlogik, ein produktionsreifes
-Mehrserver-Deployment oder die Migration beliebiger Altdatenbestände.
+Für die Umsetzung wurde eine schlanke Webanwendung auf Basis von FastAPI,
+SQLModel und SQLite vorgesehen. Diese Auswahl passte zum Projektumfang, weil
+die Anwendung damit überschaubar blieb und sich die benötigten Funktionen gut
+testen ließen.
 
 \subsection{Projektabgrenzung}
 \label{sec:Projektabgrenzung}
-Das Projekt umfasst die Entwicklung einer intern nutzbaren
-Verwaltungsanwendung einschließlich Rollenmodell, Auditierung und
-Kundendokumentation. Nicht Gegenstand der Projektarbeit sind der produktive
-Betrieb einer hochverfügbaren Infrastruktur, eine allgemeine
-Mandantenmigration aus Fremdsystemen oder die technische Umsetzung aller
-denkbaren Schnittstellen zu nachgelagerten Mail-Systemen. Diese Abgrenzung war
-erforderlich, um den Projektumfang auf einen in 80 Stunden realisierbaren und
-bewertbaren Kern zu konzentrieren.
+Im Projekt wurde die Verwaltungsanwendung selbst umgesetzt. Dazu gehören die
+Anmeldung, das Rollenmodell, die Verwaltung von Fimen, Benutzern,
+Mail-Adressen und IP-Adressen sowie das Audit-Log für Änderungen.
+
+Nicht Teil des Projekts ist der spätere Produktivbetrieb auf mehreren Servern.
+Auch die eigentliche Spam-Filterung und eine vollständige Übernahme alter Daten
+aus anderen Systemen wurden nicht umgesetzt. Die angebundenen Mail-Systeme
+bleiben unverändert und sind nicht Teil dieser Projektarbeit.
+
+Diese Abgrenzung war notwendig, damit der Umfang in den vorgegebenen 80 Stunden
+umsetzbar bleibt.

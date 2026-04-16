@@ -3,18 +3,19 @@
 \label{sec:Fazit}
 Mit dem \Fachbegriff{AntispamAdminCenter} wurde eine betriebsnahe
 Verwaltungsanwendung entwickelt, die den zuvor manuellen Pflegeprozess für
-Mail- und IP-Freigaben zentralisiert. Der wesentliche Nutzen liegt nicht nur in
-der Zeitersparnis, sondern vor allem in einer einheitlichen Datenhaltung, einer
-klaren Rechtevergabe und der Nachvollziehbarkeit fachlicher Änderungen.
+Cloud-basierte Kunden zentralisiert. Mail- und IP-Freigaben müssen dadurch
+nicht mehr auf Shell-Ebene gepflegt werden. Der Nutzen liegt nicht nur in der
+Zeitersparnis. Die Daten werden einheitlich gepflegt, Rechte sind klarer
+vergeben und Änderungen lassen sich später nachvollziehen.
 
-Das Projekt hat gezeigt, dass auch ein fachlich begrenzter Anwendungsfall eine
-saubere technische Struktur erfordert, wenn mehrere Mandanten, Rollen und
-sicherheitsrelevante Vorgaben beteiligt sind. Für einen produktiven Ausbau
-sind insbesondere eine Anbindung an eine dedizierte Datenbank, weitergehende
-Deployment-Automatisierung und zusätzliche Integrationsschnittstellen für das
-Mail-Umfeld sinnvolle nächste Schritte.
+Das Projekt hat gezeigt, dass auch ein kleinerer Anwendungsfall sorgfältig
+umgesetzt werden muss, wenn mehrere Firmen, Rollen und
+sicherheitsrelevante Vorgaben beteiligt sind. Wenn die Anwendung später
+produktiv genutzt wird, sollte sie an eine eigene Datenbank angebunden werden.
+Als nächster Schritt wäre außerdem zu prüfen, ob die Anmeldung an die
+bestehende Benutzerverwaltung angebunden werden kann zB. Azure AD .
 
-Aus Sicht des Betriebs stellt das Ergebnis eine tragfähige Grundlage für die
-weitere Standardisierung des Prozesses dar. Die wesentlichen Risiken der
-Ausgangssituation, insbesondere fehlende Transparenz und uneinheitliche
-Pflegeabläufe, wurden durch die Projektdurchführung deutlich reduziert.
+Aus Sicht des Betriebs ist das Ergebnis eine gute Grundlage, um den Prozess
+weiter zu vereinheitlichen. Die wichtigsten Probleme aus der alten Arbeitsweise
+wurden reduziert: fehlende Transparenz, uneinheitliche Pflege und die
+Abhängigkeit von Shell-Kenntnissen.
