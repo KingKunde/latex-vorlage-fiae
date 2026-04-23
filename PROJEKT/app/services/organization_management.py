@@ -6,6 +6,10 @@ from sqlmodel import Session, select
 from app.models import Organization, User
 from app.services.audit import record_create_audit, record_delete_audit, record_update_audit
 from app.services.errors import ValidationErrors, single_error
+from app.services.postfix_export import (
+    delete_postfix_for_organization,
+    sync_postfix_for_organization,
+)
 from app.services.permissions import get_accessible_organizations
 from app.services.validation import validate_required_text
 
@@ -49,6 +53,7 @@ def create_organization_entry(
     session.add(organization)
     session.commit()
     session.refresh(organization)
+    sync_postfix_for_organization(session, organization.id)
     record_create_audit(session=session, actor=current_user, entity=organization)
     return OrganizationWriteResult()
 
@@ -58,6 +63,7 @@ def update_organization_entry(
 ) -> OrganizationWriteResult:
     organization = get_organization_or_404(organization_id, session)
     before = organization.model_dump()
+    previous_name = organization.name
     normalized_name, name_error = validate_required_text(
         name, field_label="Organisationsname"
     )
@@ -77,6 +83,11 @@ def update_organization_entry(
     session.add(organization)
     session.commit()
     session.refresh(organization)
+    sync_postfix_for_organization(
+        session,
+        organization.id,
+        previous_name=previous_name,
+    )
     record_update_audit(
         session=session, actor=current_user, entity=organization, before=before
     )
@@ -88,8 +99,10 @@ def delete_organization_entry(
 ) -> None:
     organization = get_organization_or_404(organization_id, session)
     before = organization.model_dump()
+    previous_name = organization.name
     session.delete(organization)
     session.commit()
+    delete_postfix_for_organization(previous_name)
     record_delete_audit(
         session=session,
         actor=current_user,

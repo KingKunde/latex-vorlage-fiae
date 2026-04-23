@@ -35,16 +35,19 @@ Integrität und Verfügbarkeit waren dabei wichtige Anforderungen.
 
 Aus dem Projektauftrag ergaben sich folgende Kernziele:
 \begin{itemize}
-  \item zentrale und einheitliche Verwaltung aller fachlich relevanten Stammdaten
+  \item zentrale und einheitliche Verwaltung aller relevanten Stammdaten
   \item rollenbasiertes Berechtigungskonzept mit Mandantentrennung
   \item abgesicherte Anmeldung mit Session-Verwaltung und Passwort-Hashing
-  \item nachvollziehbare Protokollierung fachlicher Änderungen
+  \item nachvollziehbare Protokollierung von Änderungen
   \item Bereitstellung verlässlicher Daten für nachgelagerte Mail-Systeme
 \end{itemize}
 
 Das Projektergebnis sollte nicht nur die Bearbeitungszeit senken, sondern vor
 allem die Qualität der Datenhaltung verbessern. Die Verwaltung sollte einfacher,
 einheitlicher und für andere Administratoren besser nachvollziehbar werden.
+Gleichzeitig sollten die gepflegten Mail- und IP-Daten organisationsbezogen so
+bereitgestellt werden, dass sie von nachgelagerten Postfix-Prozessen ohne
+zusätzliche manuelle Aufbereitung weiterverwendet werden können.
 
 \subsection{Ist-Analyse}
 \label{sec:IstAnalyse}
@@ -59,7 +62,7 @@ Auch die Zuordnung zu Firmen und Benutzern war nur indirekt aus den
 vorhandenen Informationen ableitbar. Dadurch musste bei Pflegevorgängen häufig
 manuell geprüft werden, zu welchem Kunden ein Eintrag gehört, wer die Änderung
 angefordert hat und ob die jeweilige Person zur Änderung berechtigt ist. Die
-fachlichen Daten selbst waren überschaubar, der Prozess hing jedoch stark von
+Daten selbst waren überschaubar, der Prozess hing jedoch stark von
 Erfahrung, Linux-Kenntnissen und dem Wissen einzelner Administratoren ab.
 
 Aus der Analyse ergaben sich mehrere Schwachstellen. Es fehlte ein zentraler
@@ -76,8 +79,11 @@ Im Soll-Zustand soll eine zentrale Webanwendung den gesamten Pflegeprozess
 unterstützen. Firmen, Benutzer, Mail-Adressen und IP-Adressen sollen
 an einer Stelle verwaltet und über einheitliche Formulare gepflegt werden.
 Rollen und Organisationszuordnung steuern, welche Daten angezeigt und geändert
-werden dürfen. Fachliche Änderungen werden im Audit-Log festgehalten, damit sie
-später nachvollzogen werden können.
+werden dürfen. Änderungen werden im Audit-Log festgehalten, damit sie
+später nachvollzogen werden können. Die aktiven Mail- und
+IP-Einträge sollen organisationsbezogen in Exportdateien geschrieben werden, damit
+nachgelagerte Mail-Systeme auf eine einheitliche und aktuelle Datenbasis
+zugreifen können.
 
 Für die Umsetzung wurde eine schlanke Webanwendung auf Basis von FastAPI,
 SQLModel und SQLite vorgesehen. Diese Auswahl passte zum Projektumfang, weil

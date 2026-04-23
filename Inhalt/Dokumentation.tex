@@ -14,11 +14,16 @@ Eingaben werden direkt am betroffenen Feld angezeigt. Dadurch kann die Pflege
 ohne Shell-Zugriff und ohne tiefergehende Linux-Kenntnisse nachvollziehbar
 erfolgen.
 
-Das Audit-Log dient der Rückverfolgung fachlicher Änderungen. Es zeigt, wann
+Das Audit-Log dient der Rückverfolgung von Änderungen. Es zeigt, wann
 ein Datensatz erstellt, geändert oder gelöscht wurde. Soweit fachlich
 freigegeben, können Änderungen aus dem Audit-Log heraus zurückgesetzt
 werden. Ein kurzer Benutzerhinweis mit den wichtigsten Bedienregeln befindet
-sich zusätzlich im \Anhang{app:Kundenhinweis}.
+sich im \Anhang{app:Kundenhinweis}.
+
+Die Anwendung erzeugt organisationsbezogene Exportdateien für
+nachgelagerte Postfix-Prozesse. Diese werden bei Änderungen an
+Organisationen, Mail-Adressen und IP-Adressen automatisch aktualisiert, sodass
+die gepflegten Daten ohne manuelle Nacharbeit weiterverwendet werden können.
 
 Für die Einführung beim Kunden ist keine umfangreiche Schulung erforderlich.
 Die Anwendung orientiert sich an den bekannten Objekten des Fachprozesses und

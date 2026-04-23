@@ -66,7 +66,7 @@ def admin(org):
     )
 
 
-def test_user_create_and_block(client, db, org):
+def test_user_block(client, db, org):
     test_client, user = client
     user["current"] = admin(org)
 

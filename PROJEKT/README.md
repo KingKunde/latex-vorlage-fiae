@@ -52,6 +52,24 @@ Danach ist die Anwendung unter `http://127.0.0.1:8000` erreichbar.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
+## Postfix-Export
+
+Die Anwendung erzeugt beim Start und nach Änderungen an Organisationen, Mail-Adressen
+oder IP-Adressen einen Export unter `postfix/`.
+
+Struktur:
+
+```text
+postfix/
+  <Organisationsname>/
+    mail_addresses.txt
+    ip_addresses.txt
+```
+
+Dabei werden fehlende Ordner und Dateien automatisch angelegt und bestehende Dateien
+neu geschrieben. Exportiert werden nur aktive Mail- und IP-Einträge, damit ein
+externes Cron-Skript diese Dateien getrennt vom Projekt abholen kann.
+
 ## Projektstruktur
 
 ```text

@@ -1,5 +1,5 @@
 % !TEX root = ../Projektdokumentation.tex
-\subsection{Quelltextauszüge zu Datenschutz und Sicherheit}
+\subsection{Quelltextauszüge zu Datenschutz, Sicherheit und Datenexport}
 \label{app:CodeAuthentifizierung}
 
 Die folgenden Auszüge zeigen ausgewählte Kernstellen der Implementierung. Sie
@@ -82,8 +82,23 @@ Audit-Eintrag.
 \lstinputlisting[
   language=Python,
   firstline=286,
-  lastline=343,
+  lastline=365,
   firstnumber=286,
   caption={Rollback eines Audit-Eintrags},
   label={lst:audit-rollback}
 ]{PROJEKT/app/services/audit.py}
+\clearpage
+
+\subsubsection*{Postfix-Export}
+Der Auszug zeigt, wie aktive Mail- und IP-Einträge einer Organisation gelesen,
+sortiert und in die organisationsbezogenen Exportdateien geschrieben werden.
+Bei einer Umbenennung der Organisation wird das alte Exportverzeichnis entfernt.
+
+\lstinputlisting[
+  language=Python,
+  firstline=40,
+  lastline=94,
+  firstnumber=40,
+  caption={Synchronisierung der Postfix-Exportdateien},
+  label={lst:postfix-export}
+]{PROJEKT/app/services/postfix_export.py}

@@ -50,6 +50,7 @@ class AppPaths:
     web_dir: Path
     templates_dir: Path
     static_dir: Path
+    postfix_dir: Path
 
 
 def load_env_file() -> None:
@@ -107,6 +108,7 @@ def get_app_paths() -> AppPaths:
         web_dir=web_dir,
         templates_dir=web_dir / "templates",
         static_dir=web_dir / "static",
+        postfix_dir=BASE_DIR / "postfix",
     )
 
 

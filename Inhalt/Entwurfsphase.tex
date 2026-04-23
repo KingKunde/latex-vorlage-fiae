@@ -22,8 +22,8 @@ Ein Komponentendiagramm ist im
 \label{sec:DatenmodellUndRechte}
 Das Datenmodell umfasst Firmen, Benutzer,
 Mail-Adresse und IP-Adresse. Ergänzt werden diese durch Tabellen für Audit- und
-Login-Daten. Damit lässt sich später nachvollziehen, welche fachlichen
-Änderungen durchgeführt wurden und welche Anmeldevorgänge sicherheitsrelevant
+Login-Daten. Damit lässt sich später nachvollziehen, welche Änderungen
+durchgeführt wurden und welche Anmeldevorgänge sicherheitsrelevant
 waren.
 
 Im Berechtigungskonzept wurden globale und firmenbezogene Rechte
@@ -40,7 +40,7 @@ Die Benutzeroberfläche wurde bewusst einfach gehalten. Im Mittelpunkt stand,
 dass Daten schnell und mit möglichst wenigen Fehlern erfasst werden können.
 Die Oberfläche wurde mit einem festen Navigationsbereich und einem zentralen
 Inhaltsbereich entworfen. Bei einem Wechsel zwischen Dashboard, Firmen,
-Benutzern, Mail-Adressen, IP-Adressen und Audit-Log soll nur der fachliche
+Benutzern, Mail-Adressen, IP-Adressen und Audit-Log soll nur der
 Inhaltsbereich ausgetauscht werden, während Navigation und Grundlayout
 erhalten bleiben. Dadurch muss nicht die gesamte Seite neu aufgebaut werden,
 was die Bedienung bei Bereichswechseln beschleunigt und unnötige
@@ -56,7 +56,7 @@ reduzieren.
 
 \subsection{Sicherheitskonzept und Auditierung}
 \label{sec:Sicherheitskonzept}
-Neben der fachlichen Bedienung wurde ein Sicherheitskonzept entworfen. Dazu
+Neben der Bedienung wurde ein Sicherheitskonzept entworfen. Dazu
 gehören Session-Login, Passwort-Hashing, Login-Audit, Begrenzung wiederholter
 Fehlanmeldungen sowie kontobezogene Sperrmechanismen. Diese Funktionen sollen
 verhindern, dass Verwaltungsfunktionen ohne Berechtigung genutzt werden.
@@ -64,8 +64,8 @@ verhindern, dass Verwaltungsfunktionen ohne Berechtigung genutzt werden.
 Das Audit-Log wurde als eigener Teil der Anwendung vorgesehen. Jede relevante
 Änderung an Firmen, Benutzern, Mail-Adressen und IP-Adressen wird mit
 Zusatzinformationen protokolliert. Dadurch können fehlerhafte Pflegevorgänge
-nachvollzogen und bewertet werden. Für ausgewählte Szenarien ist außerdem ein
-Rollback vorgesehen, damit unbeabsichtigte Änderungen kontrolliert
+nachvollzogen und bewertet werden. Für ausgewählte Szenarien ist ein Rollback
+vorgesehen, damit unbeabsichtigte Änderungen kontrolliert
 zurückgenommen werden können.
 
 \subsection{Schnittstellen und Datenfluss}
@@ -76,9 +76,19 @@ verwalteten Mail- und IP-Informationen stehen gleichzeitig strukturiert für
 nachgelagerte Verarbeitungsschritte bereit. So müssen die Daten nicht doppelt
 gepflegt werden und können einfacher weiterverarbeitet werden.
 
+Für die Anbindung nachgelagerter Postfix-Prozesse wurde ein dateibasierter
+Export vorgesehen. Pro Organisation soll unter \Code{postfix/<Organisationsname>/}
+je eine Datei \Code{mail\_addresses.txt} und \Code{ip\_addresses.txt}
+bereitgestellt werden. Exportiert werden dabei nur aktive Einträge. Damit kann
+ein externer Folgeprozess die gepflegten Daten übernehmen, ohne selbst
+auf die Anwendungsdatenbank zugreifen zu müssen.
+
 Im Datenfluss beginnt jeder Pflegevorgang mit der Authentifizierung des
 Benutzers. Danach prüft die Anwendung Rolle und Firmenzuordnung,
 validiert die Eingaben, schreibt die Änderung in die Datenbank und erzeugt bei
-fachlich relevanten Aktionen einen Audit-Eintrag. So wird bei jedem Vorgang
+relevanten Aktionen einen Audit-Eintrag. So wird bei jedem Vorgang
 geprüft, ob der Benutzer die Änderung durchführen darf und ob sie später
 nachvollzogen werden kann.
+Bei Änderungen an Organisationen, Mail-Adressen oder IP-Adressen wird
+anschließend der organisationsbezogene Postfix-Export aktualisiert, damit
+Oberfläche, Datenbank und bereitgestellte Exportdateien konsistent bleiben.

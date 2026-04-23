@@ -8,6 +8,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import get_app_paths, get_settings
 from app.core.db import create_db_and_tables, engine, ensure_root_user
 from app.core.logging import setup_logging
+from app.services.postfix_export import sync_all_postfix_exports
 from app.web.api.router import api_router
 
 
@@ -21,6 +22,7 @@ def create_application() -> FastAPI:
         create_db_and_tables()
         with Session(engine) as session:
             ensure_root_user(session, settings.root)
+            sync_all_postfix_exports(session)
         yield
 
     app = FastAPI(title=settings.app_title, lifespan=lifespan)

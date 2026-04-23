@@ -3,10 +3,10 @@
 \label{sec:Variantenvergleich}
 Für das Projekt wurden drei Lösungsvarianten betrachtet. Die erste
 Variante war die Beibehaltung der manuellen Pflege auf Shell-Ebene. Die zweite
-Variante war die Einführung einer allgemeinen Standardlösung für Stammdaten-
-und Freigabeverwaltung. Die dritte Variante war die Entwicklung einer
-betriebsspezifischen Webanwendung. Die Entscheidung wurde sowohl fachlich als
-auch wirtschaftlich bewertet.
+Variante war eine Verwaltungsanwendung auf Basis von Django und Django Admin.
+Die dritte Variante war die Entwicklung einer schlanken betriebsspezifischen
+Webanwendung mit FastAPI und SQLModel. Die Entscheidung wurde sowohl fachlich
+als auch wirtschaftlich bewertet.
 
 \subsection{Technische Bewertung der Varianten}
 \label{sec:TechnischeBewertung}
@@ -16,26 +16,26 @@ Administratoren abhängig. Außerdem fehlen eine saubere Trennung der
 Firmen, eine nachvollziehbare Änderungshistorie und eine einheitliche
 Prüfung der Eingaben.
 
-Eine Standardlösung kann manuellen Aufwand grundsätzlich reduzieren, passt aber
-nicht automatisch zum vorhandenen Ablauf. Im Projekt geht es nicht um eine
-beliebige Stammdatenpflege, sondern um Firmen, Mail- und IP-Freigaben,
-Rollen, Anmeldung und Nachvollziehbarkeit. Bei einer Fremdlösung wären deshalb
-Anpassungen und Abstimmungen zu erwarten gewesen. Außerdem hätte das
-Rollenmodell wahrscheinlich an die Standardlösung angepasst werden müssen und
-nicht umgekehrt.
+Eine Umsetzung mit Django und Django Admin hätte viele Grundfunktionen bereits
+mitgebracht. Dazu gehören Benutzerverwaltung, Authentifizierung, Rechteprüfung,
+ORM, Formularverarbeitung und eine generische Administrationsoberfläche. Für
+das Projektziel war diese Variante jedoch zu umfangreich. Benötigt wurde keine
+vollständige Admin-Plattform, sondern eine schlanke Oberfläche für Firmen,
+Benutzer, Mail-Adressen, IP-Adressen, Auditierung und Postfix-Export. Django
+hätte dafür zusätzliche Framework-Strukturen und Standardmechanismen
+eingeführt, die angepasst oder bewusst ausgeblendet werden müssten.
 
-Die Eigenentwicklung deckt genau die benötigten Funktionen ab und kann am
-vorhandenen Ablauf ausgerichtet werden. Die Anwendung bleibt
-überschaubar, weil nur die Funktionen umgesetzt werden, die für die Pflege der
-Cloud-basierten Kunden wirklich benötigt werden. Der zusätzliche
-Entwicklungsaufwand passt in den geplanten Zeitrahmen und vermeidet eine
-unnötige Abhängigkeit von einem Fremdprodukt.
+Die schlanke Eigenentwicklung deckt genau die benötigten Funktionen ab und kann
+am vorhandenen Ablauf ausgerichtet werden. Die Anwendung bleibt überschaubar,
+weil nur die Funktionen umgesetzt werden, die für die Pflege der Cloud-basierten
+Kunden benötigt werden. Der Entwicklungsaufwand passt in den geplanten
+Zeitrahmen und vermeidet unnötige Framework-Funktionen.
 
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|p{4.6cm}|c|c|c|}
 \hline
-\textbf{Kriterium} & \textbf{Manuell} & \textbf{Standardlösung} & \textbf{Eigenentwicklung} \\
+\textbf{Kriterium} & \textbf{Manuell} & \textbf{Django Admin} & \textbf{Eigenentwicklung} \\
 \hline
 Mandantentrennung & schwach & mittel & hoch \\
 \hline
@@ -46,6 +46,8 @@ Nachvollziehbarkeit von Änderungen & schwach & mittel & hoch \\
 Anpassbarkeit & niedrig & mittel & hoch \\
 \hline
 Betriebliche Einführbarkeit & hoch & mittel & hoch \\
+\hline
+Einarbeitungsaufwand & leicht & hoch & mittel \\
 \hline
 \end{tabular}
 \caption{Technischer Vergleich der Lösungsvarianten}
@@ -111,10 +113,11 @@ Wartbarkeit. Die gewichtete Auswertung ist im
 \Anhang{app:Variantenvergleich} enthalten.
 
 Die manuelle Pflege erzielt den niedrigsten Nutzwert, weil sie den bestehenden
-Zustand im Wesentlichen beibehält. Die Standardlösung verbessert zwar die
-Bedienung, müsste aber erst an den konkreten Prozess angepasst werden. Die
-Eigenentwicklung erzielt den höchsten Nutzwert, weil sie zum vorhandenen
-Ablauf passt und ohne unnötige Zusatzfunktionen eingeführt werden kann.
+Zustand im Wesentlichen beibehält. Die Django-Variante verbessert zwar die
+Bedienung und bringt viele technische Grundlagen mit, wäre für den abgegrenzten
+Projektumfang aber zu umfangreich gewesen. Die Eigenentwicklung erzielt den
+höchsten Nutzwert, weil sie zum vorhandenen Ablauf passt und ohne unnötige
+Zusatzfunktionen eingeführt werden kann.
 Aus diesen Gründen wurde die Eigenentwicklung als wirtschaftlich und fachlich
 sinnvollste Variante ausgewählt.
 

@@ -1,7 +1,7 @@
 % !TEX root = ../Projektdokumentation.tex
 \subsection{Implementierung der wichtigsten Funktionen}
 \label{sec:ImplementierungKernfunktionen}
-Die Umsetzung erfolgte schrittweise entlang der fachlichen Teilbereiche.
+Die Umsetzung erfolgte schrittweise entlang der Teilbereiche.
 Zunächst wurden die Datenklassen für Firmen, Benutzer, Mail-Adressen,
 IP-Adressen und Audit-Daten angelegt. Danach folgten die Funktionen für
 Validierung, Benutzerverwaltung, Rollenprüfung und die Pflegeprozesse. So
@@ -20,12 +20,12 @@ Benutzerkontext zugeordnet.
 
 Beim Lesen von Mail- und IP-Adressen werden die sichtbaren Datensätze anhand
 dieses angemeldeten Benutzers gefiltert. Vor dem Ändern eines Datensatzes wird
-zusätzlich geprüft, ob der Benutzer die betroffene Firma bearbeiten darf.
+geprüft, ob der Benutzer die betroffene Firma bearbeiten darf.
 Dadurch wird die Mandantentrennung nicht nur optisch in der Oberfläche, sondern
-auch serverseitig durchgesetzt. Der zugehörige Quelltextauszug ist in
-Quelltextauszug~\ref{lst:permissions} im \Anhang{app:CodeAuthentifizierung}
-dargestellt, weil dort die Filterung sichtbarer Daten und die Prüfung vor
-Änderungen direkt zusammengeführt sind.
+auch serverseitig durchgesetzt. Der zugehörige Nachweis befindet sich im
+Quelltextanhang \Anhang{app:CodeAuthentifizierung} als
+Quelltextauszug~\ref{lst:permissions}, weil dort die Filterung sichtbarer Daten
+und die Prüfung vor Änderungen direkt zusammengeführt sind.
 
 Ein Schwerpunkt lag auf der Anmeldung und Absicherung der Benutzerkonten. Die
 Anwendung nutzt Session-Login, Passwort-Hashing mit Argon2, Login-Audit sowie
@@ -36,39 +36,53 @@ prüft die Anwendung, ob für die IP-Adresse oder das Benutzerkonto bereits eine
 Sperre aktiv ist. Erst danach wird das Passwort gegen den gespeicherten Hash
 geprüft und bei Erfolg eine neue Session angelegt. Fehlgeschlagene und
 erfolgreiche Anmeldeversuche werden protokolliert, damit sicherheitsrelevante
-Vorgänge nachvollziehbar bleiben. Die Umsetzung ist in
-Quelltextauszug~\ref{lst:auth-session} und
-Quelltextauszug~\ref{lst:login-security} im
-\Anhang{app:CodeAuthentifizierung} referenziert. Diese Stellen sind relevant,
-weil sie den Übergang von einer reinen Eingabeprüfung zur geschützten
+Vorgänge nachvollziehbar bleiben. Die Umsetzung ist im Quelltextanhang
+\Anhang{app:CodeAuthentifizierung} in Quelltextauszug~\ref{lst:auth-session}
+und Quelltextauszug~\ref{lst:login-security} referenziert. Diese Stellen sind
+relevant, weil sie den Übergang von einer reinen Eingabeprüfung zur geschützten
 Benutzersession zeigen.
 
-Für fachliche Änderungen wurde ein Audit-Log umgesetzt. Beim Anlegen, Ändern
+Für Änderungen wurde ein Audit-Log umgesetzt. Beim Anlegen, Ändern
 oder Löschen von Firmen, Benutzern, Mail-Adressen und IP-Adressen wird ein
 Eintrag mit Benutzerbezug, Aktion und Änderungsdaten geschrieben. Sensible
 Felder wie Passwörter werden vor der Protokollierung maskiert. Für ausgewählte
-Änderungen werden außerdem die Informationen gespeichert, die für ein
+Änderungen werden die Informationen gespeichert, die für ein
 kontrolliertes Zurücksetzen benötigt werden. Dadurch kann nicht nur der aktuelle
 Stand gepflegt, sondern auch die Entstehung eines Datenstands nachvollzogen
 werden. Die Maskierung sensibler Felder und das Schreiben des Audit-Eintrags
-sind in Quelltextauszug~\ref{lst:audit-redaction} und
+sind im Quelltextanhang \Anhang{app:CodeAuthentifizierung} in
+Quelltextauszug~\ref{lst:audit-redaction} und
 Quelltextauszug~\ref{lst:audit-create} dargestellt. Der dazugehörige Rollback
-ist in Quelltextauszug~\ref{lst:audit-rollback} enthalten.
+ist dort in Quelltextauszug~\ref{lst:audit-rollback} enthalten.
+
+Der Postfix-Export wurde in die Fachlogik integriert. Beim Start der Anwendung
+und nach Änderungen an Organisationen, Mail-Adressen oder
+IP-Adressen werden organisationsbezogene Exportdateien unter
+\Code{postfix/<Organisationsname>/} synchronisiert. Dabei werden die Dateien
+\Code{mail\_addresses.txt} und \Code{ip\_addresses.txt} vollständig neu
+geschrieben, damit keine veralteten Einträge erhalten bleiben. Exportiert
+werden nur aktive Datensätze. Bei einer Umbenennung einer Organisation wird das
+zugehörige Exportverzeichnis entsprechend angepasst. Die zentrale
+Synchronisierung ist im Quelltextanhang \Anhang{app:CodeAuthentifizierung} in
+Quelltextauszug~\ref{lst:postfix-export} dargestellt.
 
 \subsection{Erzielte Projektergebnisse}
 \label{sec:ErzielteProjektergebnisse}
 Mit Abschluss der Implementierung lag eine lauffähige Webanwendung vor.
 Firmen, Benutzer,
-Mail-Adressen und IP-Adressen können zentral verwaltet werden. Fachliche
-Änderungen werden im Audit-Log dokumentiert und können für definierte Fälle
-über einen Rollback wiederhergestellt werden.
+Mail-Adressen und IP-Adressen können zentral verwaltet werden. Änderungen
+werden im Audit-Log dokumentiert und können für definierte Fälle über einen
+Rollback wiederhergestellt werden. Die aktiven Mail- und IP-Daten stehen pro
+Organisation als aktuelle Exportdateien für nachgelagerte Postfix-Prozesse zur
+Verfügung.
 
 Zusammenfassend wurde damit nicht nur eine neue Eingabemaske geschaffen. Der
 bisher manuelle Pflegeprozess wurde in eine strukturierte Anwendung mit
-Rechtekonzept, Prüfung der Eingaben und Änderungshistorie überführt.
+Rechtekonzept, Prüfung der Eingaben, Änderungshistorie und automatisierter
+Datenbereitstellung für den Folgeprozess überführt.
 
 Während der Implementierung zeigte sich, dass die Trennung zwischen
 firmenbezogenen und globalen Rechten nicht nur in der Oberfläche
-berücksichtigt werden darf. Die Prüfung muss auch in den fachlichen Funktionen
+berücksichtigt werden darf. Die Prüfung muss auch in den Service-Funktionen
 stattfinden, damit geschützte Aktionen nicht über andere Wege ausgeführt werden
 können. Deshalb wurde die Rechteprüfung in den Service-Funktionen umgesetzt.

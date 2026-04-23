@@ -11,6 +11,7 @@ from app.services.permissions import (
     ensure_manageable_organization,
     get_accessible_ip_addresses,
 )
+from app.services.postfix_export import sync_postfix_for_organization
 from app.services.validation import validate_ip_address
 
 
@@ -58,6 +59,7 @@ def create_ip_address_entry(
     session.add(entry)
     session.commit()
     session.refresh(entry)
+    sync_postfix_for_organization(session, organization_id)
     record_create_audit(session=session, actor=current_user, entity=entry)
     return IPAddressWriteResult(entry=entry)
 
@@ -73,6 +75,7 @@ def update_ip_address_entry(
 ) -> IPAddressWriteResult:
     entry = get_ip_address_or_404(entry_id, session)
     before = entry.model_dump()
+    previous_organization_id = entry.organization_id
     normalized_ip, ip_error = validate_ip_address(ip_address)
     if ip_error is not None:
         return IPAddressWriteResult(validation_errors=single_error("ip_address", ip_error))
@@ -91,6 +94,9 @@ def update_ip_address_entry(
     session.add(entry)
     session.commit()
     session.refresh(entry)
+    sync_postfix_for_organization(session, entry.organization_id)
+    if previous_organization_id != entry.organization_id:
+        sync_postfix_for_organization(session, previous_organization_id)
     record_update_audit(session=session, actor=current_user, entity=entry, before=before)
     return IPAddressWriteResult(entry=entry)
 
@@ -101,8 +107,10 @@ def delete_ip_address_entry(
     entry = get_ip_address_or_404(entry_id, session)
     before = entry.model_dump()
     ensure_manageable_ip_address(current_user, entry)
+    organization_id = entry.organization_id
     session.delete(entry)
     session.commit()
+    sync_postfix_for_organization(session, organization_id)
     record_delete_audit(
         session=session,
         actor=current_user,

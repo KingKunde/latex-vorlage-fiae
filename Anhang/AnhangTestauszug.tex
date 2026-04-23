@@ -13,3 +13,15 @@ Benutzerverwaltung und das Anlegen weiterer Benutzer erhält.
   firstnumber=69,
   caption={Automatisierter Test der Benutzerrechte}
 ]{PROJEKT/tests/test_user_access.py}
+
+Der folgende Testauszug prüft den Postfix-Export. Dabei wird sichergestellt,
+dass nur aktive Mail- und IP-Einträge exportiert werden und die Ausgabe in den
+jeweiligen organisationsbezogenen Dateien landet.
+
+\lstinputlisting[
+  language=Python,
+  firstline=69,
+  lastline=91,
+  firstnumber=69,
+  caption={Automatisierter Test des Postfix-Exports}
+]{PROJEKT/tests/test_postfix.py}

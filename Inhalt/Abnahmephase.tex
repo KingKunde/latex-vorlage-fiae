@@ -2,17 +2,24 @@
 \section{Qualitätssicherung}
 \label{sec:Qualitaetssicherung}
 Die Qualitätssicherung erfolgte durch automatisierte und manuelle Tests. Mit
-Pytest wurden vor allem Validierungen, Benutzerverwaltung, Audit-Funktionen und
-Formularlogik geprüft. Zusätzlich wurden die wichtigsten Arbeitsabläufe direkt
-über die Weboberfläche getestet, darunter Anmeldung, Rollenvergabe,
+Pytest wurden die Bereiche Eingabevalidierung, Formularlogik,
+Benutzerverwaltung, Rollen- und Zugriffsschutz, Pflegeabläufe,
+Audit-Funktionen einschließlich Rollback sowie der Postfix-Export geprüft.
+Die wichtigsten Arbeitsabläufe wurden auch direkt über die Weboberfläche
+getestet, darunter Anmeldung, Rollenvergabe,
 Mandantentrennung sowie die Pflege von Mail- und IP-Adressen.
 
-Diese Mischung war für das Projekt passend, weil sie sowohl die fachlichen
-Regeln als auch die Bedienung abdeckt. Die automatisierten Tests helfen dabei,
+Diese Mischung war für das Projekt passend, weil sie sowohl die Regeln als auch
+die Bedienung abdeckt. Die automatisierten Tests helfen dabei,
 Fehler bei späteren Änderungen schneller zu erkennen. Die manuellen Tests
-waren zusätzlich notwendig, um Sichtbarkeiten, Navigation und Fehlermeldungen
+waren notwendig, um Sichtbarkeiten, Navigation und Fehlermeldungen
 im Zusammenspiel der einzelnen Bereiche zu prüfen. Ein Auszug aus dem
-automatisierten Zugriffstest befindet sich im \Anhang{app:Testauszug}.
+automatisierten Zugriffstest befindet sich im Testanhang
+\Anhang{app:Testauszug}. Weitere
+automatisierte Tests prüfen unter anderem, dass Postfix-Exportverzeichnisse bei
+Organisationsänderungen korrekt angelegt oder umbenannt werden und nur aktive
+Mail- und IP-Einträge in den Exportdateien landen. Ein entsprechender Auszug
+befindet sich ebenfalls im Testanhang \Anhang{app:Testauszug}.
 
 \begin{table}[htbp]
 \centering
@@ -40,8 +47,10 @@ User legt weiteren Benutzer an & Zugriff wird verweigert & HTTP 403 & OK \\
 Die geplanten Funktionen wurden erreicht. Die Anwendung ist
 mehrmandantenfähig, stellt ein rollenbasiertes Berechtigungskonzept bereit und
 ermöglicht die zentrale Pflege von Firmen, Benutzern, Mail-Adressen
-und IP-Adressen. Zusätzlich wurden Audit-Log, Login-Schutz und Rollback für
-ausgewählte Änderungen umgesetzt.
+und IP-Adressen. Audit-Log, Login-Schutz und Rollback wurden für ausgewählte
+Änderungen umgesetzt. Die gepflegten aktiven Mail- und IP-Daten
+werden organisationsbezogen für nachgelagerte Postfix-Prozesse
+exportiert.
 
 \begin{table}[htbp]
 \centering
@@ -56,6 +65,8 @@ Rollen- und Rechtesystem & umgesetzt & umgesetzt \\
 Auditierbare Änderungen & umgesetzt & umgesetzt \\
 \hline
 Rollback einzelner Änderungen & optional & umgesetzt \\
+\hline
+Export für nachgelagerte Mail-Systeme & umgesetzt & umgesetzt \\
 \hline
 Projektzeit & 80 h & eingehalten \\
 \hline
@@ -75,9 +86,11 @@ nachvollzogen werden können.
 Nach Abschluss der Implementierung wurde die Anwendung dem Auftraggeber
 vorgeführt. Dabei wurden die zentralen Abläufe gemeinsam durchgegangen:
 Anmeldung, Pflege von Firmen, Benutzern, Mail-Adressen und IP-Adressen,
-Rollenprüfung sowie Nachvollziehbarkeit über das Audit-Log. Die Rückmeldungen
-aus dem Review waren positiv, da die bisher manuelle Pflege, nachvollziehbarer
-und einheitlicher abgebildet wurde.
+Rollenprüfung, Nachvollziehbarkeit über das Audit-Log sowie die Bereitstellung
+der gepflegten Daten über die organisationsbezogenen Postfix-Exportdateien. Die
+Rückmeldungen aus dem Review waren positiv, da die bisher manuelle Pflege
+nachvollziehbarer, einheitlicher und besser an den Folgeprozess angebunden
+wurde.
 
 Das Projektergebnis wurde fachlich abgenommen. Offene Punkte betrafen keine
 fehlenden Kernfunktionen, sondern mögliche spätere Erweiterungen für einen
@@ -87,6 +100,7 @@ produktiven Ausbau.
 \label{sec:BewertungTestergebnisse}
 Die durchgeführten Tests bestätigten, dass die wesentlichen Pflegeabläufe
 stabil funktionieren. Besonders wichtig war dabei die Kombination aus Login,
-Rollenprüfung, Mandantentrennung und Auditierung. Offene Punkte betreffen keine
-fehlenden Hauptfunktionen, sondern mögliche spätere Erweiterungen wie
-weitergehende Integrations- oder Lasttests für einen produktionsnahen Ausbau.
+Rollenprüfung, Mandantentrennung, Auditierung und konsistenter
+Exportbereitstellung. Offene Punkte betreffen keine fehlenden Hauptfunktionen,
+sondern mögliche spätere Erweiterungen wie weitergehende Integrations- oder
+Lasttests für einen produktionsnahen Ausbau.

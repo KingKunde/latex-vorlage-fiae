@@ -11,6 +11,7 @@ from app.services.permissions import (
     ensure_manageable_organization,
     get_accessible_mail_addresses,
 )
+from app.services.postfix_export import sync_postfix_for_organization
 from app.services.validation import validate_email_address
 
 
@@ -62,6 +63,7 @@ def create_mail_address_entry(
     session.add(entry)
     session.commit()
     session.refresh(entry)
+    sync_postfix_for_organization(session, organization_id)
     record_create_audit(session=session, actor=current_user, entity=entry)
     return MailAddressWriteResult(entry=entry)
 
@@ -77,6 +79,7 @@ def update_mail_address_entry(
 ) -> MailAddressWriteResult:
     entry = get_mail_address_or_404(entry_id, session)
     before = entry.model_dump()
+    previous_organization_id = entry.organization_id
     normalized_email, email_error = validate_email_address(
         email, field_label="Mail-Adresse"
     )
@@ -99,6 +102,9 @@ def update_mail_address_entry(
     session.add(entry)
     session.commit()
     session.refresh(entry)
+    sync_postfix_for_organization(session, entry.organization_id)
+    if previous_organization_id != entry.organization_id:
+        sync_postfix_for_organization(session, previous_organization_id)
     record_update_audit(session=session, actor=current_user, entity=entry, before=before)
     return MailAddressWriteResult(entry=entry)
 
@@ -109,8 +115,10 @@ def delete_mail_address_entry(
     entry = get_mail_address_or_404(entry_id, session)
     before = entry.model_dump()
     ensure_manageable_mail_address(current_user, entry)
+    organization_id = entry.organization_id
     session.delete(entry)
     session.commit()
+    sync_postfix_for_organization(session, organization_id)
     record_delete_audit(
         session=session,
         actor=current_user,
