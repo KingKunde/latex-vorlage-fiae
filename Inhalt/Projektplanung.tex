@@ -1,4 +1,6 @@
 % !TEX root = ../Projektdokumentation.tex
+\section{Projektplanung}
+\label{sec:Projektplanung}
 \subsection{Projektorganisation und Zeitplanung}
 \label{sec:Projektorganisation}
 Die Projektdurchführung erfolgte im für die FIAE-Projektarbeit vorgesehenen
@@ -37,6 +39,27 @@ wurden die Teilbereiche Firmen, Benutzer, Mail-Adressen, IP-Adressen,
 Authentifizierung und Auditierung getrennt betrachtet und danach umgesetzt.
 Rückmeldungen aus dem internen IT-Umfeld konnten dadurch direkt in den Entwurf
 und die Implementierung einfließen.
+
+\subsection{Strategie der Qualitätssicherung}
+\label{sec:QSStrategie}
+Die Qualitätssicherung wurde bereits in der Planung als fester Bestandteil des
+Projekts berücksichtigt. Ziel war es, die fachlich korrekte Pflege der Daten,
+die Einhaltung des Rechtekonzepts, die Nachvollziehbarkeit von Änderungen sowie
+die konsistente Bereitstellung der Exportdateien abzusichern.
+
+Dafür wurde eine Kombination aus technischen und organisatorischen Maßnahmen
+vorgesehen. Die Fachlogik sollte getrennt von Routen und Oberfläche umgesetzt
+werden, damit Prüfungen zentral stattfinden und besser testbar bleiben.
+Eingaben sollten serverseitig validiert, sicherheitsrelevante Vorgänge
+protokolliert und die wichtigsten Funktionen durch automatisierte Tests
+abgedeckt werden. Ergänzend war vorgesehen, die zentralen Arbeitsabläufe
+manuell über die Weboberfläche zu prüfen, um neben der Fachlogik auch
+Bedienung, Sichtbarkeiten und Fehlermeldungen zu bewerten.
+
+Inhaltlich lag der Schwerpunkt der Qualitätssicherung auf Benutzerverwaltung,
+Rollen- und Zugriffsschutz, Mandantentrennung, Validierung, Auditierung,
+Rollback und Postfix-Export. Vollständige Last- oder produktionsnahe
+Integrationstests waren im Rahmen des 80-Stunden-Projekts nicht geplant.
 
 Materiell wurde ein vorhandener Entwicklungsarbeitsplatz mit Python~3.12,
 FastAPI, SQLModel, SQLite und einer lokalen Testumgebung genutzt. Externe
